@@ -1,16 +1,11 @@
-<<<<<<< Updated upstream
-print("Hello World")
-print("greenJoa")
-
-print("singjun")
-=======
 import pymysql
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
 
 def open_db():  #DB 오픈 함수 
-    conn = pymysql.connect(host='localhost',user='root',password='K@ng0119',db='movies')
+    # 성준 
+    conn = pymysql.connect(host='localhost',user='root',password='Shin5633^^', db='DBProject_NaverMovie')
     cur = conn.cursor(pymysql.cursors.DictCursor)
     return conn,cur
 
@@ -105,4 +100,3 @@ def gen_movie_list(): # 네이버 현재상영영화 페이지에서 크롤링�
     
 if __name__ == '__main__':
     gen_movie_list()
->>>>>>> Stashed changes
