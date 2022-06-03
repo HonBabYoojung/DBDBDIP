@@ -157,12 +157,81 @@ def gen_movie_table() :
     close_db(conn, cur)
 
 # Director 테이블    
-def gen_director_table() :
+def gen_scope_table() :
     
     conn, cur = open_db()
     
+    conn, cur = open_db()
+    
+    # 네이버 현재상영영화 사이트 url
+    # 15세 관람가 영화 리스트 링크
+    url = "https://movie.naver.com/movie/sdb/browsing/bmovie.naver?grade=1001003"
+    
+    # request로 받아온 텍스트형태의 html를 soup 객체로 변환
+    soup = BeautifulSoup(urllib.request.urlopen(url).read(), "html.parser")
+    
+    # ul.lst_detail_t1 -> 영화 정보 리스트 -> 여기서 li 태그들을 모두 가져옴
+    ul = soup.find("ul", class_="directory_list").find_all("li")
+    # ul은 list 형태
+    
+    # movie 테이블에 행들을 추가하기 위한 sql문
+    insert_sql = """insert into scope(movie_id, scopeName)
+                values(%s, %s)"""
+    
+    # 받아온 데이터 튜플들을 넣어둘 buffer 배열
+    buffer = []
+    
+    movie_id = 1
+    
+    for pageNum in range(1, 691):
+        
+        url = "https://movie.naver.com/movie/sdb/browsing/bmovie.naver?grade=1001003"+"&page=" + str(pageNum)
+        soup = BeautifulSoup(urllib.request.urlopen(url).read(), "html.parser")
+        a_list = soup.find("ul", class_="directory_list").find_all("a")
+
+        for i, a in enumerate(a_list):
+            # 영화 제목 title
+            print("movie_id", movie_id)
+            if a["href"].find("/movie") != -1 :
+            
+                movie_url = "https://movie.naver.com" + a["href"]
+                movie_soup = BeautifulSoup(urllib.request.urlopen(movie_url).read(), "html.parser")
+                
+                scopeList = movie_soup.find_all("a")
+                
+                for i, scope in enumerate(scopeList):
+                    
+                    if scope.get("href",'').find("genre") != -1 :
+                        # movie 테이블에 넣을 튜플
+                        print(scope)
+                        tuple = (movie_id, scope.get_text())
+                        # buffer배열에 튜플 넣어주기
+                        buffer.append(tuple)
+                movie_id += 1
+                
+                buffer_set = set(buffer)
+                buffer = list(buffer_set)
+
+                if len(buffer) % 1000 == 0 :
+                    # executemany(sql문, 튜플을 담은 list)
+                    cur.executemany(insert_sql, buffer)
+                    # db에 저장하기 위해 conn.commit() 작성
+                    conn.commit()
+                    # 추가하였으면 다시 buffer 배열 비워주기
+                    print("%d rows" %i)
+                    buffer = []
+            
+
+        # buffer 배열에 튜플 남았으면, 남은 튜플 insert
+    if buffer :
+        cur.executemany(insert_sql, buffer)
+        conn.commit()
+    
+    # # cursor 및 db connection 닫기
     close_db(conn, cur)
+    
     
 # 실행하는 파일이 자기자신일 경우, 함수 실행
 if __name__ == '__main__' :
-    gen_movie_table()
+    #gen_movie_table()
+    gen_scope_table()

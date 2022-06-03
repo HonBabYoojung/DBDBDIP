@@ -17,13 +17,19 @@ create table Movies(
     totalAudience int
 );
 
-# Scope 테이블
+alter table Movies modify title mediumtext;
+alter table Movies modify summary mediumtext;
+
+# text가 너무 클시에 위의 alter mediumtext 필요!
+
 create table Scope(
 	scope_id int primary key auto_increment,
-    movie_id int,
-    scopeName varchar(10),
+	movie_id int not null,
+    scopeName varchar(100),
     foreign key (movie_id) references Movies(movie_id)
 );
+
+alter table Scope modify scopeName mediumtext;
 
 # Director 테이블
 create table Director(
