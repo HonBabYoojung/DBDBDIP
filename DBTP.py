@@ -99,8 +99,4 @@ def gen_movie_list(): # 네이버 현재상영영화 페이지에서 크롤링�
     close_db(conn2,cur2)
     
 if __name__ == '__main__':
-<<<<<<< Updated upstream
     gen_movie_list()
-=======
-    gen_movie_list()
->>>>>>> Stashed changes
