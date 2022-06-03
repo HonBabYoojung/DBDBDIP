@@ -3,18 +3,58 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="DBHTML.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+	<script src="DBHTML.js"></script>
 	<title>데이터 베이스 기말 과제</title>
 </head>
 <body>
-	<div id="page_wrapper">
-		<header id=“main-header”></header>
-<nav id=“main-navigation”></nav>
-<div id=“content”>
-<section id=“main-section”></section>
-<aside id=“main-aside”></aside>
-</div>
+	<div id="page-wrapper">
+
+		<!-- 제목 배너 -->
+		<header id=“main-header”>
+			<h1>네이버 영화 크롤링</h1>
+		</header>
+
+		<!-- 메뉴 배너 -->
+		<nav id=“main-navigation”>
+			<div class="left-navigator">
+				<ul>
+					<li>테스트</li>
+				</ul>
+			</div>
+			<div class="right-navigator">
+				<form>
+					<input type="text" class="search">
+					<input type="submit" class="search-submit">
+				</form>
+			</div>
+		</nav>
+
+		<!-- 본문 -->
+		<div id=“content”>
+			<!-- 본문 내용 -->
+			<section id=“main-section”>
+				<article>
+					<div class="movie-title">
+						<h1>
+							클레멘타인
+						</h1>
+					</div>
+				</article>
+			</section>
+
+			<!-- 측면 배너 -->
+			<aside id=“main-aside”>
+				<div class="aside-list">
+					
+				</div>
+			</aside>
+		</div>
 
 	</div>
-	<footer id=“main-footer”></footer>
+	<footer id=“main-footer”>
+		<a href="#">Created by DBDBDIP</a>
+	</footer>
 </body>
 </html>
