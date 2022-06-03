@@ -5,7 +5,7 @@ from datetime import datetime
 
 def open_db():  #DB 오픈 함수 
     # 성준 
-    conn = pymysql.connect(host='localhost',user='root',password='Shin5633^^', db='DBProject_NaverMovie')
+    conn = pymysql.connect(host='localhost',user='root',password='1234', db='DBProject_NaverMovie')    
     cur = conn.cursor(pymysql.cursors.DictCursor)
     return conn,cur
 
