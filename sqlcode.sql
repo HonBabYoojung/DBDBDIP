@@ -1,3 +1,4 @@
+# 각자 스키마 이름 넣기
 use dbproject_navermovie;
 
 # Movies 테이블
@@ -22,6 +23,7 @@ alter table Movies modify summary mediumtext;
 
 # text가 너무 클시에 위의 alter mediumtext 필요!
 
+# Scope 테이블
 create table Scope(
 	scope_id int primary key auto_increment,
 	movie_id int not null,
@@ -34,7 +36,12 @@ alter table Scope modify scopeName mediumtext;
 # Director 테이블
 create table Director(
 	d_id int primary key auto_increment,
-    movie_id int,
-    directorName varchar(20),
-    foreign key (movie_id) references Movies(movie_id)
+    movie_code int,
+    directorName varchar(100),
+    filmoCode int,
+    foreign key (movie_code) references Movies(movie_code)
 );
+
+alter table Director modify directorName mediumtext;
+
+# Cast 테이블
