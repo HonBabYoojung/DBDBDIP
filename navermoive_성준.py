@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup # html을 수프객체로 만들어서 데이터 �
 
 # db connection 설정
 def open_db() : 
-    conn = pymysql.Connect(host='localhost', user='root', password='sean9864!', db='dbproject_navermovie')
+    conn = pymysql.Connect(host='localhost', user='root', password='Shin5633^^', db='dbproject_navermovie')
     cur = conn.cursor(pymysql.cursors.DictCursor)
     return conn, cur
 
@@ -458,7 +458,7 @@ def gen_photo_table() :
     # ul은 list 형태
     
     # movie 테이블에 행들을 추가하기 위한 sql문
-    insert_sql = """insert into moviephoto(movie_code, imageType, PhotoLink)
+    insert_sql = """insert into photo(movie_code, imageType, PhotoLink)
                 values(%s, %s, %s)"""
     
     # 받아온 데이터 튜플들을 넣어둘 buffer 배열
@@ -474,67 +474,40 @@ def gen_photo_table() :
         for i, a in enumerate(a_list):
             # 영화 제목 title
             print(count)
+            
             if a["href"].find("/movie") != -1 :
                 
                 codeList = a["href"].split("=")
                 movie_code = int(codeList[1])
-            
-                movie_url = "https://movie.naver.com" + a["href"]
-            
-                movie_soup = BeautifulSoup(urllib.request.urlopen(movie_url).read(), "html.parser")
+                print(movie_code)
+                curl = "https://movie.naver.com/movie/bi/mi/photoView.naver?code=" + str(movie_code)
+                csoup = BeautifulSoup(urllib.request.urlopen(curl).read(), "html.parser")                
+                isPhoto = csoup.find("span", class_="count")
                 
-                isPhoto = movie_soup.find("span", class_="pg_cnt").find("em")
-                
-                if int(isPhoto) > 0:
+                if isPhoto == None:
                     buffer.append((movie_code, None, None))  
                 
-                else: 
-                    
-                    curl = "https://movie.naver.com/movie/bi/mi/photoView.naver?code=" + str(movie_code)
-                    csoup = BeautifulSoup(urllib.request.urlopen(curl).read(), "html.parser")
+                else:
                     
                     photoul = csoup.find_all("li", class_="_list")
                     #print(castul)
                     
                     #print(directorList)
                     for photo in photoul :
-                        imageType = photoul.find("img")["alt"]
-                        PhotoLink = photoul.find("img")["src"]
+                        imageType = photo.find("img")["alt"]
+                        PhotoLink = photo.find("img")["src"]
                         tuple = (movie_code, imageType, PhotoLink)
                         buffer.append(tuple)
-                        #print(movie_id,"의 감독 :", director)
-                        # if photo.find("p", class_="p_thumb") :
-                        #     try:
-                        #         castImg = cast.find("p", class_="p_thumb").find("img")["src"]
-                        #     except:
-                        #         castImg = None
-                        #     try: 
-                        #         castName = cast.find("div", class_="p_info").find("a").get_text()
-                        #     except:
-                        #         castName = None
-                                
-                        #     try: 
-                        #         mainorsub = cast.find("p", class_="in_prt").find("em").get_text()
-                                
-                        #     except: 
-                        #         mainorsub = None
-                                
-                        #     try:
-                        #         roleName = cast.find("p", class_="pe_cmt").find("span").get_text()
-                                
-                        #     except: 
-                        #         roleName = None
-
-                        
-
+                
 
 
                 # 중복 제거를 위한 절차
                 buffer_set = set(buffer)
                 buffer = list(buffer_set)
+                buffer.sort()
                 count += 1
                 
-
+                    
                 if len(buffer) % 1000 == 0 :
                     # executemany(sql문, 튜플을 담은 list)
                     cur.executemany(insert_sql, buffer)
@@ -588,6 +561,7 @@ def gen_video_table() :
                 
                 codeList = a["href"].split("=")
                 movie_code = int(codeList[1])
+                
             
                 movie_url = "https://movie.naver.com" + a["href"]
             
@@ -746,7 +720,7 @@ def gen_country_table() :
     
     # # cursor 및 db connection 닫기
     close_db(conn, cur)
- 
+
 
 # 실행하는 파일이 자기자신일 경우, 함수 실행
 if __name__ == '__main__' :
@@ -754,4 +728,5 @@ if __name__ == '__main__' :
     # gen_scope_table()
     # gen_director_table()
     # gen_cast_table()
-    gen_country_table()
+    #gen_country_table()
+    gen_photo_table()

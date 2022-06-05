@@ -63,14 +63,14 @@ alter table MovieCast modify roleName mediumtext;
 alter table MovieCast modify castImg mediumtext;
 
 # Photo 테이블
-create table Photo(
+create table Photo (
 	photo_id int primary key auto_increment,
     movie_code int NOT NULL,
     imageType varchar(50),
-    photoLink varchar(100),
+    photoLink varchar(500),
     foreign key (movie_code) references Movies(movie_code)
 );
-alter table Photo modify imageType mediumtext;
+
 alter table Photo modify photoLink mediumtext;
 
 # Video 테이블
@@ -113,3 +113,4 @@ create table Rate(
 alter table Rate modify rateInfo mediumtext;
 alter table Rate modify writerId mediumtext;
 alter table Rate modify rateDate mediumtext;
+
