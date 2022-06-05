@@ -21,6 +21,7 @@ create table Movies(
 
 alter table Movies modify title mediumtext;
 alter table Movies modify summary mediumtext;
+select count(*) from Movies;
 select * from Movies;
 
 # text가 너무 클시에 위의 alter mediumtext 필요!
@@ -69,6 +70,7 @@ create table Photo(
     photoLink varchar(100),
     foreign key (movie_code) references Movies(movie_code)
 );
+alter table Photo modify imageType mediumtext;
 alter table Photo modify photoLink mediumtext;
 
 # Video 테이블
@@ -88,7 +90,7 @@ alter table Video modify videoImgsrc mediumtext;
 
 # Country 테이블
 create table Country(
-	country_id int auto_increment,
+	country_id int auto_increment primary key auto_increment,
 	movie_code int NOT NULL,
 	countryName varchar(50),
     foreign key (movie_code) references Movies(movie_code)
@@ -98,7 +100,7 @@ alter table Country modify countryName mediumtext;
 
 # Rate 테이블
 create table Rate(
-	rate_id  int auto_increment,
+	rate_id  int auto_increment primary key auto_increment,
 	movie_code int NOT NULL,
 	starScore int,
 	rateInfo varchar(300),
