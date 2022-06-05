@@ -458,7 +458,7 @@ def gen_photo_table() :
     # ul은 list 형태
     
     # movie 테이블에 행들을 추가하기 위한 sql문
-    insert_sql = """insert into moviephoto(movie_code, imageType, PhotoLink)
+    insert_sql = """insert into photo(movie_code, imageType, PhotoLink)
                 values(%s, %s, %s)"""
     
     # 받아온 데이터 튜플들을 넣어둘 buffer 배열
@@ -568,7 +568,7 @@ def gen_video_table() :
     # ul은 list 형태
     
     # movie 테이블에 행들을 추가하기 위한 sql문
-    insert_sql = """insert into moviephoto(movie_code,videoName,videoImgsrc,videoLink,videoDate)
+    insert_sql = """insert into video(movie_code,videoName,videoImgsrc,videoLink,videoDate)
                 values(%s, %s, %s, %s ,%s)"""
     
     # 받아온 데이터 튜플들을 넣어둘 buffer 배열
@@ -665,7 +665,8 @@ def gen_video_table() :
     # # cursor 및 db connection 닫기
     close_db(conn, cur)
 
-def gen_country_table() :
+
+def gen_rate_table() :
     conn, cur = open_db()
     
     # 네이버 현재상영영화 사이트 url
@@ -680,7 +681,7 @@ def gen_country_table() :
     # ul은 list 형태
     
     # movie 테이블에 행들을 추가하기 위한 sql문
-    insert_sql = """insert into moviephoto(movie_code,countryName)
+    insert_sql = """insert into Rate(movie_code,starScore,rateInfo,writerId,rateDate,likeNum,dislikeNum)
                 values(%s, %s)"""
     
     # 받아온 데이터 튜플들을 넣어둘 buffer 배열
@@ -705,26 +706,28 @@ def gen_country_table() :
             
                 movie_soup = BeautifulSoup(urllib.request.urlopen(movie_url).read(), "html.parser")
                 
-                isVideo = movie_soup.find("span", class_="pg_cnt").find("em")
+                isRate = movie_soup.find("div", class_="main_score")
                 
-                if isVideo>0:
-                    buffer.append((movie_code, None,None,None,None))  
+                if isRate == None:
+                    buffer.append((movie_code, None,None,None,None,None,None))  
                 
                 else: 
                     
-                    curl = "https://movie.naver.com/movie/bi/mi/media.naver?code=" + str(movie_code)
+                    curl = "https://movie.naver.com/movie/bi/mi/point.naver?code=" + str(movie_code)
                     csoup = BeautifulSoup(urllib.request.urlopen(curl).read(), "html.parser")
                     
-                    videoul = csoup.find("div", class_="ifr_module").find_all("ul",class_="video_thumb")
+                    rateul = csoup.find("div", class_="star_result").find_all("li")
                     #print(castul)
                     
                     #print(directorList)
-                    for video in videoul :
-                        videoName = video.find("a",class_="video_obj")["title"]
-                        videoImgsrc = video.find("img")["src"]
-                        videoLink = video.find("a",class_="video_obj")["href"]
-                        videoDate = csoup.find("p",class_="video_date")
-                        tuple = (movie_code,videoName,videoImgsrc,videoLink,videoDate)
+                    for rate in rateul :
+                        starScore = rate.find("div",class_="star_score").find("em")
+                        rateInfo = rate.find("div",class_="score_reple").find("span")
+                        writerId = rate.find("div",class_="score_reple").find("em").find("span")
+                        rateDate = rate.find("div",class_="score_reple").find_all("em")[1]
+                        likeNum = rate.find("div",class_="btn_area").find_all("strong")[0]
+                        dislikeNum = rate.find("div",class_="btn_area").find_all("strong")[1]
+                        tuple = (movie_code,starScore,rateInfo,writerId,rateDate,likeNum,dislikeNum)
                         buffer.append(tuple)
                         #print(movie_id,"의 감독 :", director)
                         # if photo.find("p", class_="p_thumb") :
