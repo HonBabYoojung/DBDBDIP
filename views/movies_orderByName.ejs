@@ -2,11 +2,24 @@
     <head>
         <meta charset="utf-8">
         <title>데이터 베이스 기말 과제</title>
+        <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
     </head>
     <body>
+        
+
         <h1>네이버 영화 구축</h1>
         <h4>create by DBDBDIP</h4>
         <p>총 영화갯수: <%=list.length + "개"%></p>
+        <div style="display: flex; margin-bottom:20px;">
+            <!-- <input type="text" id="movie_code" style="margin-right: 20px;"/>
+            <input type="submit" id="movie_info_btn"> -->
+            <form action="/movieInfo" method="post">
+                영화코드: <input type="text" name="movie_code" style="margin-right: 20px;"/>
+                <button type="submit">검색</button>
+            </form>
+        </div>
+
         <table border='1'>
             <colgroup>
                 <col width='100'><col width='100'><col width='150'><col width='150 '><col width='150'><col width='150'><col width='150'><col width='150'><col width='150'>
@@ -24,9 +37,9 @@
                     <th>제작년도</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody >
                 <% list.forEach(function(li) { %>
-                    <tr>
+                    <tr style='cursor: pointer'>
                         <td><%=li.movie_code %></td>
                         <td><%=li.title %></td>
                         <td><%=li.audience_rate %></td>
@@ -40,6 +53,32 @@
                 <% }); %>
             </tbody>
         </table border='1'>
-        
+        <script>
+            window.onload = function() {
+
+                //function statusChange(statusItem) {
+                //   var strText= $(statusItem).children("td:eq(0)").text();
+                //    $("#movie_code").val(strText);
+                //} 
+
+                $('#movie_info_btn').click(function() {
+                    $.ajax({
+                        url : '/movieCodeTest',
+                        async: true,
+                        type: 'POST',
+                        data: {
+                            movie_code: parseInt($('#movie_code').val())
+                        },
+                        dataType: 'json',
+                        //success: function(data) {
+                        //    alert("보내기 성공");
+                        //},
+                        //error: function(err){
+                        //    alert("보내기 실패");
+                        //}
+                    })
+                })
+            }
+        </script>
     </body>
 </html>

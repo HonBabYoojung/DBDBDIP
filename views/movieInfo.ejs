@@ -1,0 +1,43 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>데이터 베이스 기말 과제</title>
+        
+        <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    </head>
+    <body>
+        
+
+        <h1>네이버 영화 구축</h1>
+        <h4>create by DBDBDIP</h4>
+        <div id="moveInfo" style="display: flex; width:100%; padding: 50px;">
+            <div id="leftInfo" style="width: 60%;">
+                <h1><%= basicInfo[0]%></h1>
+                <h3 style="color: gray;"><%= basicInfo[1]%></h3>
+                <div style="height: 1px; background-color: lightgray;"></div>
+                <p><strong>관람객 평점 :</strong> <%= basicInfo[2]%> <strong>참여자 수 :</strong> <%= basicInfo[3]%> 명</p>
+                <p><strong>기자/평론가 평점 :</strong> <%= basicInfo[4]%> <strong>참여자 수 :</strong> <%= basicInfo[5]%> 명</p>
+                <div style="height: 1px; background-color: lightgray; margin-bottom: 20px;"></div>
+                <strong>개요 : </strong><% scopeList.forEach(function(scope) { %> <span><%= scope %></span> <% }); %>
+                <span>|</span>
+                <strong><% countryList.forEach(function(country) { %> <span><%= country %></span> <% }); %></strong>
+                <span>|</span>
+                <strong><%= basicInfo[6]%> 분</strong>
+                <span>|</span>
+                <strong><%= basicInfo[7]%> 개봉</strong>
+
+                <p><strong>감독 : </strong><% directorList.forEach(function(director) { %> <span><%= director %></span> <% }); %></p>
+                <p><strong>출연 : </strong><% castList.forEach(function(cast) { %> <span><%= cast %></span> <% }); %></p>
+                <p><strong>등급 : </strong>15세 관람가</p>
+            </div>
+            
+            
+            
+            <div id="rightInfo" style="width: 40%">
+                <img src="">
+            </div>
+        </div>
+
+    </body>
+</html>
