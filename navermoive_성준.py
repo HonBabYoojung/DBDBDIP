@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup # html을 수프객체로 만들어서 데이터 �
 
 # db connection 설정
 def open_db() : 
-    conn = pymysql.Connect(host='localhost', user='root', password='Shin5633^^', db='dbproject_navermovie')
+    conn = pymysql.Connect(host='localhost', user='root', password='K@ng0119', db='dbproject_navermovie')
     cur = conn.cursor(pymysql.cursors.DictCursor)
     return conn, cur
 
@@ -31,7 +31,7 @@ def gen_movie_table() :
     # ul은 list 형태
     
     # movie 테이블에 행들을 추가하기 위한 sql문
-    insert_sql = """insert into movies2(movie_code, title, summary, audience_rate, audience_count, journalist_rate, journalist_count, playing_time, opening_date, manufacture_year, image, totalAudience)
+    insert_sql = """insert into movies(movie_code, title, summary, audience_rate, audience_count, journalist_rate, journalist_count, playing_time, opening_date, manufacture_year, image, totalAudience)
                 values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
     
     
@@ -443,10 +443,344 @@ def gen_cast_table() :
     # # cursor 및 db connection 닫기
     close_db(conn, cur)
 
+def gen_photo_table() :
+    conn, cur = open_db()
+    
+    # 네이버 현재상영영화 사이트 url
+    # 15세 관람가 영화 리스트 링크
+    url = "https://movie.naver.com/movie/sdb/browsing/bmovie.naver?grade=1001003"
+    
+    # request로 받아온 텍스트형태의 html를 soup 객체로 변환
+    soup = BeautifulSoup(urllib.request.urlopen(url).read(), "html.parser")
+    
+    # ul.lst_detail_t1 -> 영화 정보 리스트 -> 여기서 li 태그들을 모두 가져옴
+    ul = soup.find("ul", class_="directory_list").find_all("li")
+    # ul은 list 형태
+    
+    # movie 테이블에 행들을 추가하기 위한 sql문
+    insert_sql = """insert into moviephoto(movie_code, imageType, PhotoLink)
+                values(%s, %s, %s)"""
+    
+    # 받아온 데이터 튜플들을 넣어둘 buffer 배열
+    buffer = []
+    count = 0
+    
+    for pageNum in range(1, 691):
+        
+        url = "https://movie.naver.com/movie/sdb/browsing/bmovie.naver?grade=1001003&page=" + str(pageNum).strip()
+        soup = BeautifulSoup(urllib.request.urlopen(url).read(), "html.parser")
+        a_list = soup.find("ul", class_="directory_list").find_all("a")
+
+        for i, a in enumerate(a_list):
+            # 영화 제목 title
+            print(count)
+            if a["href"].find("/movie") != -1 :
+                
+                codeList = a["href"].split("=")
+                movie_code = int(codeList[1])
+            
+                movie_url = "https://movie.naver.com" + a["href"]
+            
+                movie_soup = BeautifulSoup(urllib.request.urlopen(movie_url).read(), "html.parser")
+                
+                isPhoto = movie_soup.find("span", class_="pg_cnt").find("em")
+                
+                if int(isPhoto) > 0:
+                    buffer.append((movie_code, None, None))  
+                
+                else: 
+                    
+                    curl = "https://movie.naver.com/movie/bi/mi/photoView.naver?code=" + str(movie_code)
+                    csoup = BeautifulSoup(urllib.request.urlopen(curl).read(), "html.parser")
+                    
+                    photoul = csoup.find_all("li", class_="_list")
+                    #print(castul)
+                    
+                    #print(directorList)
+                    for photo in photoul :
+                        imageType = photoul.find("img")["alt"]
+                        PhotoLink = photoul.find("img")["src"]
+                        tuple = (movie_code, imageType, PhotoLink)
+                        buffer.append(tuple)
+                        #print(movie_id,"의 감독 :", director)
+                        # if photo.find("p", class_="p_thumb") :
+                        #     try:
+                        #         castImg = cast.find("p", class_="p_thumb").find("img")["src"]
+                        #     except:
+                        #         castImg = None
+                        #     try: 
+                        #         castName = cast.find("div", class_="p_info").find("a").get_text()
+                        #     except:
+                        #         castName = None
+                                
+                        #     try: 
+                        #         mainorsub = cast.find("p", class_="in_prt").find("em").get_text()
+                                
+                        #     except: 
+                        #         mainorsub = None
+                                
+                        #     try:
+                        #         roleName = cast.find("p", class_="pe_cmt").find("span").get_text()
+                                
+                        #     except: 
+                        #         roleName = None
+
+                        
+
+
+
+                # 중복 제거를 위한 절차
+                buffer_set = set(buffer)
+                buffer = list(buffer_set)
+                count += 1
+                
+
+                if len(buffer) % 1000 == 0 :
+                    # executemany(sql문, 튜플을 담은 list)
+                    cur.executemany(insert_sql, buffer)
+                    # db에 저장하기 위해 conn.commit() 작성
+                    conn.commit()
+                    # 추가하였으면 다시 buffer 배열 비워주기
+                    print("%d rows" %i)
+                    buffer = []
+            
+
+        # buffer 배열에 튜플 남았으면, 남은 튜플 insert
+    if buffer :
+        cur.executemany(insert_sql, buffer)
+        conn.commit()
+    
+    # # cursor 및 db connection 닫기
+    close_db(conn, cur)
+
+def gen_video_table() :
+    conn, cur = open_db()
+    
+    # 네이버 현재상영영화 사이트 url
+    # 15세 관람가 영화 리스트 링크
+    url = "https://movie.naver.com/movie/sdb/browsing/bmovie.naver?grade=1001003"
+    
+    # request로 받아온 텍스트형태의 html를 soup 객체로 변환
+    soup = BeautifulSoup(urllib.request.urlopen(url).read(), "html.parser")
+    
+    # ul.lst_detail_t1 -> 영화 정보 리스트 -> 여기서 li 태그들을 모두 가져옴
+    ul = soup.find("ul", class_="directory_list").find_all("li")
+    # ul은 list 형태
+    
+    # movie 테이블에 행들을 추가하기 위한 sql문
+    insert_sql = """insert into moviephoto(movie_code,videoName,videoImgsrc,videoLink,videoDate)
+                values(%s, %s, %s, %s ,%s)"""
+    
+    # 받아온 데이터 튜플들을 넣어둘 buffer 배열
+    buffer = []
+    count = 0
+    
+    for pageNum in range(1, 691):
+        
+        url = "https://movie.naver.com/movie/sdb/browsing/bmovie.naver?grade=1001003&page=" + str(pageNum).strip()
+        soup = BeautifulSoup(urllib.request.urlopen(url).read(), "html.parser")
+        a_list = soup.find("ul", class_="directory_list").find_all("a")
+
+        for i, a in enumerate(a_list):
+            # 영화 제목 title
+            print(count)
+            if a["href"].find("/movie") != -1 :
+                
+                codeList = a["href"].split("=")
+                movie_code = int(codeList[1])
+            
+                movie_url = "https://movie.naver.com" + a["href"]
+            
+                movie_soup = BeautifulSoup(urllib.request.urlopen(movie_url).read(), "html.parser")
+                
+                isVideo = movie_soup.find("span", class_="pg_cnt").find("em")
+                
+                if isVideo>0:
+                    buffer.append((movie_code, None,None,None,None))  
+                
+                else: 
+                    
+                    curl = "https://movie.naver.com/movie/bi/mi/media.naver?code=" + str(movie_code)
+                    csoup = BeautifulSoup(urllib.request.urlopen(curl).read(), "html.parser")
+                    
+                    videoul = csoup.find("div", class_="ifr_module").find_all("ul",class_="video_thumb")
+                    #print(castul)
+                    
+                    #print(directorList)
+                    for video in videoul :
+                        videoName = video.find("a",class_="video_obj")["title"]
+                        videoImgsrc = video.find("img")["src"]
+                        videoLink = video.find("a",class_="video_obj")["href"]
+                        videoDate = csoup.find("p",class_="video_date")
+                        tuple = (movie_code,videoName,videoImgsrc,videoLink,videoDate)
+                        buffer.append(tuple)
+                        #print(movie_id,"의 감독 :", director)
+                        # if photo.find("p", class_="p_thumb") :
+                        #     try:
+                        #         castImg = cast.find("p", class_="p_thumb").find("img")["src"]
+                        #     except:
+                        #         castImg = None
+                        #     try: 
+                        #         castName = cast.find("div", class_="p_info").find("a").get_text()
+                        #     except:
+                        #         castName = None
+                                
+                        #     try: 
+                        #         mainorsub = cast.find("p", class_="in_prt").find("em").get_text()
+                                
+                        #     except: 
+                        #         mainorsub = None
+                                
+                        #     try:
+                        #         roleName = cast.find("p", class_="pe_cmt").find("span").get_text()
+                                
+                        #     except: 
+                        #         roleName = None
+
+                        
+
+
+
+                # 중복 제거를 위한 절차
+                buffer_set = set(buffer)
+                buffer = list(buffer_set)
+                count += 1
+                
+
+                if len(buffer) % 1000 == 0 :
+                    # executemany(sql문, 튜플을 담은 list)
+                    cur.executemany(insert_sql, buffer)
+                    # db에 저장하기 위해 conn.commit() 작성
+                    conn.commit()
+                    # 추가하였으면 다시 buffer 배열 비워주기
+                    print("%d rows" %i)
+                    buffer = []
+            
+
+        # buffer 배열에 튜플 남았으면, 남은 튜플 insert
+    if buffer :
+        cur.executemany(insert_sql, buffer)
+        conn.commit()
+    
+    # # cursor 및 db connection 닫기
+    close_db(conn, cur)
+
+def gen_country_table() :
+    conn, cur = open_db()
+    
+    # 네이버 현재상영영화 사이트 url
+    # 15세 관람가 영화 리스트 링크
+    url = "https://movie.naver.com/movie/sdb/browsing/bmovie.naver?grade=1001003"
+    
+    # request로 받아온 텍스트형태의 html를 soup 객체로 변환
+    soup = BeautifulSoup(urllib.request.urlopen(url).read(), "html.parser")
+    
+    # ul.lst_detail_t1 -> 영화 정보 리스트 -> 여기서 li 태그들을 모두 가져옴
+    ul = soup.find("ul", class_="directory_list").find_all("li")
+    # ul은 list 형태
+    
+    # movie 테이블에 행들을 추가하기 위한 sql문
+    insert_sql = """insert into moviephoto(movie_code,countryName)
+                values(%s, %s)"""
+    
+    # 받아온 데이터 튜플들을 넣어둘 buffer 배열
+    buffer = []
+    count = 0
+    
+    for pageNum in range(1, 691):
+        
+        url = "https://movie.naver.com/movie/sdb/browsing/bmovie.naver?grade=1001003&page=" + str(pageNum).strip()
+        soup = BeautifulSoup(urllib.request.urlopen(url).read(), "html.parser")
+        a_list = soup.find("ul", class_="directory_list").find_all("a")
+
+        for i, a in enumerate(a_list):
+            # 영화 제목 title
+            print(count)
+            if a["href"].find("/movie") != -1 :
+                
+                codeList = a["href"].split("=")
+                movie_code = int(codeList[1])
+            
+                movie_url = "https://movie.naver.com" + a["href"]
+            
+                movie_soup = BeautifulSoup(urllib.request.urlopen(movie_url).read(), "html.parser")
+                
+                isVideo = movie_soup.find("span", class_="pg_cnt").find("em")
+                
+                if isVideo>0:
+                    buffer.append((movie_code, None,None,None,None))  
+                
+                else: 
+                    
+                    curl = "https://movie.naver.com/movie/bi/mi/media.naver?code=" + str(movie_code)
+                    csoup = BeautifulSoup(urllib.request.urlopen(curl).read(), "html.parser")
+                    
+                    videoul = csoup.find("div", class_="ifr_module").find_all("ul",class_="video_thumb")
+                    #print(castul)
+                    
+                    #print(directorList)
+                    for video in videoul :
+                        videoName = video.find("a",class_="video_obj")["title"]
+                        videoImgsrc = video.find("img")["src"]
+                        videoLink = video.find("a",class_="video_obj")["href"]
+                        videoDate = csoup.find("p",class_="video_date")
+                        tuple = (movie_code,videoName,videoImgsrc,videoLink,videoDate)
+                        buffer.append(tuple)
+                        #print(movie_id,"의 감독 :", director)
+                        # if photo.find("p", class_="p_thumb") :
+                        #     try:
+                        #         castImg = cast.find("p", class_="p_thumb").find("img")["src"]
+                        #     except:
+                        #         castImg = None
+                        #     try: 
+                        #         castName = cast.find("div", class_="p_info").find("a").get_text()
+                        #     except:
+                        #         castName = None
+                                
+                        #     try: 
+                        #         mainorsub = cast.find("p", class_="in_prt").find("em").get_text()
+                                
+                        #     except: 
+                        #         mainorsub = None
+                                
+                        #     try:
+                        #         roleName = cast.find("p", class_="pe_cmt").find("span").get_text()
+                                
+                        #     except: 
+                        #         roleName = None
+
+                        
+
+
+
+                # 중복 제거를 위한 절차
+                buffer_set = set(buffer)
+                buffer = list(buffer_set)
+                count += 1
+                
+
+                if len(buffer) % 1000 == 0 :
+                    # executemany(sql문, 튜플을 담은 list)
+                    cur.executemany(insert_sql, buffer)
+                    # db에 저장하기 위해 conn.commit() 작성
+                    conn.commit()
+                    # 추가하였으면 다시 buffer 배열 비워주기
+                    print("%d rows" %i)
+                    buffer = []
+            
+
+        # buffer 배열에 튜플 남았으면, 남은 튜플 insert
+    if buffer :
+        cur.executemany(insert_sql, buffer)
+        conn.commit()
+    
+    # # cursor 및 db connection 닫기
+    close_db(conn, cur)
+
 
 # 실행하는 파일이 자기자신일 경우, 함수 실행
 if __name__ == '__main__' :
-    #gen_movie_table()
-    #gen_scope_table()
-    #gen_director_table()
+    gen_movie_table()
+    gen_scope_table()
+    gen_director_table()
     gen_cast_table()
