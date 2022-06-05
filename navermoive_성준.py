@@ -1,3 +1,4 @@
+import enum
 from inspect import classify_class_attrs
 import pymysql # pymysql를 import
 import urllib.request 
@@ -5,7 +6,7 @@ from bs4 import BeautifulSoup # html을 수프객체로 만들어서 데이터 �
 
 # db connection 설정
 def open_db() : 
-    conn = pymysql.Connect(host='localhost', user='root', password='K@ng0119', db='dbproject_navermovie')
+    conn = pymysql.Connect(host='localhost', user='root', password='Shin5633^^', db='dbproject_navermovie')
     cur = conn.cursor(pymysql.cursors.DictCursor)
     return conn, cur
 
@@ -736,8 +737,8 @@ def gen_rate_table() :
     # ul은 list 형태
     
     # movie 테이블에 행들을 추가하기 위한 sql문
-    insert_sql = """insert into Rate(movie_code,starScore,rateInfo,writerId,rateDate,likeNum,dislikeNum)
-                values(%s, %s)"""
+    insert_sql = """insert into Rate(movie_code, starScore, rateInfo, writerId, rateDate, likeNum, dislikeNum)
+                values(%s, %s, %s, %s, %s, %s, %s)"""
     
     # 받아온 데이터 튜플들을 넣어둘 buffer 배열
     buffer = []
@@ -753,7 +754,7 @@ def gen_rate_table() :
             # 영화 제목 title
             #print(count)
             if a["href"].find("/movie") != -1 :
-                
+                print(count)
                 codeList = a["href"].split("=")
                 movie_code = int(codeList[1])
             
@@ -761,64 +762,28 @@ def gen_rate_table() :
             
                 movie_soup = BeautifulSoup(urllib.request.urlopen(movie_url).read(), "html.parser")
                 
-                isRate = movie_soup.find("div", class_="main_score")
+                isRate = movie_soup.find("div", class_="score_result")
                 
                 if isRate == None:
-                    buffer.append((movie_code, None,None,None,None,None,None))  
+                    buffer.append((movie_code, None, None, None, None, None, None))  
                 
                 else: 
                     
-                    curl = "https://movie.naver.com/movie/bi/mi/point.naver?code=" + str(movie_code)
-                    csoup = BeautifulSoup(urllib.request.urlopen(curl).read(), "html.parser")
+                    rateul = movie_soup.find("div", class_="score_result").find("ul").find_all("li")
                     
-                    rateul = csoup.select("body > div > div")
-                    #print(castul)
-                    print(rateul)
-                    #print(directorList)
-                    for rate in rateul :
-                        print(rate)
-                        print(rate.find("span"))
-                        # starScore = rate.find("div",class_="star_score").find("em")
-                        # rateInfo = rate.find("div",class_="score_reple").find("span")
-                        # writerId = rate.find("div",class_="score_reple").find("dt").find("span")
-                        # print(rateDate = rate.find("div",class_="score_reple").find_all("em")[1])
-                        # rateDate = rate.find("div",class_="score_reple").find_all("em")[1]
-                        # likeNum = rate.find("div",class_="btn_area").find_all("strong")[0]
-                        # dislikeNum = rate.find("div",class_="btn_area").find_all("strong")[1]
-                        # tuple = (movie_code,starScore,rateInfo,writerId,rateDate,likeNum,dislikeNum)
-                        # buffer.append(tuple)
-                        #print(movie_id,"의 감독 :", director)
-                        # if photo.find("p", class_="p_thumb") :
-                        #     try:
-                        #         castImg = cast.find("p", class_="p_thumb").find("img")["src"]
-                        #     except:
-                        #         castImg = None
-                        #     try: 
-                        #         castName = cast.find("div", class_="p_info").find("a").get_text()
-                        #     except:
-                        #         castName = None
-                                
-                        #     try: 
-                        #         mainorsub = cast.find("p", class_="in_prt").find("em").get_text()
-                                
-                        #     except: 
-                        #         mainorsub = None
-                                
-                        #     try:
-                        #         roleName = cast.find("p", class_="pe_cmt").find("span").get_text()
-                                
-                        #     except: 
-                        #         roleName = None
-
-                        
-
-
+                    for i, rate in enumerate(rateul) :
+                        starScore = rate.find("div", class_= "star_score").find("em").get_text()
+                        rateInfo = rate.find("div", class_="score_reple").find("p").get_text().strip()
+                        writerId = rate.find("div", class_="score_reple").find("dl").find("dt").find_all("em")[0].find("a").find("span").get_text()
+                        rateDate = rate.find("div", class_="score_reple").find("dl").find("dt").find_all("em")[1].get_text()
+                        likeNum = rate.find("a", class_="_sympathyButton").find("strong").get_text()
+                        dislikeNum = rate.find("a", class_="_notSympathyButton").find("strong").get_text()
+                        buffer.append((movie_code, starScore, rateInfo, writerId, rateDate, likeNum, dislikeNum))  
 
                 # 중복 제거를 위한 절차
                 buffer_set = set(buffer)
                 buffer = list(buffer_set)
                 count += 1
-                
 
                 if len(buffer) % 1000 == 0 :
                     # executemany(sql문, 튜플을 담은 list)
