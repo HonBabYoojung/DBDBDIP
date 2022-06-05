@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup # html을 수프객체로 만들어서 데이터 �
 
 # db connection 설정
 def open_db() : 
-    conn = pymysql.Connect(host='localhost', user='root', password='Shin5633^^', db='dbproject_navermovie')
+    conn = pymysql.Connect(host='localhost', user='root', password='K@ng0119', db='dbproject_navermovie')
     cur = conn.cursor(pymysql.cursors.DictCursor)
     return conn, cur
 
@@ -751,7 +751,7 @@ def gen_rate_table() :
 
         for i, a in enumerate(a_list):
             # 영화 제목 title
-            print(count)
+            #print(count)
             if a["href"].find("/movie") != -1 :
                 
                 codeList = a["href"].split("=")
@@ -771,19 +771,22 @@ def gen_rate_table() :
                     curl = "https://movie.naver.com/movie/bi/mi/point.naver?code=" + str(movie_code)
                     csoup = BeautifulSoup(urllib.request.urlopen(curl).read(), "html.parser")
                     
-                    rateul = csoup.find("div", class_="score_result").find_all("li")
+                    rateul = csoup.select("body > div > div")
                     #print(castul)
-                    
+                    print(rateul)
                     #print(directorList)
                     for rate in rateul :
-                        starScore = rate.find("div",class_="star_score").find("em")
-                        rateInfo = rate.find("div",class_="score_reple").find("span")
-                        writerId = rate.find("div",class_="score_reple").find("dt").find("span")
-                        rateDate = rate.find("div",class_="score_reple").find_all("em")[1]
-                        likeNum = rate.find("div",class_="btn_area").find_all("strong")[0]
-                        dislikeNum = rate.find("div",class_="btn_area").find_all("strong")[1]
-                        tuple = (movie_code,starScore,rateInfo,writerId,rateDate,likeNum,dislikeNum)
-                        buffer.append(tuple)
+                        print(rate)
+                        print(rate.find("span"))
+                        # starScore = rate.find("div",class_="star_score").find("em")
+                        # rateInfo = rate.find("div",class_="score_reple").find("span")
+                        # writerId = rate.find("div",class_="score_reple").find("dt").find("span")
+                        # print(rateDate = rate.find("div",class_="score_reple").find_all("em")[1])
+                        # rateDate = rate.find("div",class_="score_reple").find_all("em")[1]
+                        # likeNum = rate.find("div",class_="btn_area").find_all("strong")[0]
+                        # dislikeNum = rate.find("div",class_="btn_area").find_all("strong")[1]
+                        # tuple = (movie_code,starScore,rateInfo,writerId,rateDate,likeNum,dislikeNum)
+                        # buffer.append(tuple)
                         #print(movie_id,"의 감독 :", director)
                         # if photo.find("p", class_="p_thumb") :
                         #     try:
