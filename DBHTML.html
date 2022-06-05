@@ -3,58 +3,69 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="DBHTML.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-	<script src="DBHTML.js"></script>
+	<link rel="stylesheet" type="text/css" href="./DBHTML.css">
+	<script type="module" src="./DBHTML.js"></script>	
+	<script type="module" src="./module.js"></script>
+	<script type="text/javascript">
+		hello();
+	</script>	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<title>데이터 베이스 기말 과제</title>
 </head>
 <body>
 	<div id="page-wrapper">
 
 		<!-- 제목 배너 -->
-		<header id=“main-header”>
-			<h1>네이버 영화 크롤링</h1>
+		<header id="main-header">
+			<div class="header-title">
+				<h1 style="margin-bottom: 5px">네이버 영화 구축</h1>
+				<h3 style="margin-bottom: 5px">create by DBDBDIP</h3>
+			</div>
+			
+		
+			<div class="header-search">
+				<input type="text" class="search" placeholder="영화 이름을 입력하세요">
+				<button class="searchBtn" >검색</button>
+			</div>
+
+			<div class="header-underline">
+				
+			</div>
 		</header>
 
 		<!-- 메뉴 배너 -->
-		<nav id=“main-navigation”>
-			<div class="left-navigator">
-				<ul>
-					<li>테스트</li>
-				</ul>
-			</div>
-			<div class="right-navigator">
-				<form>
-					<input type="text" class="search">
-					<input type="submit" class="search-submit">
-				</form>
-			</div>
-		</nav>
+		<div class="order-nav">
+			
+				<input type="radio" name="order" value="orderByName" id="idName" checked/>
+				<label for="idName" id="nameClick" onclick="hello()">
+				가나다순 
+				</label>
+	
+				<input type="radio" name="order" value="orderByYear" id="idYear"/>
+				<label for="idYear" id="yearClick">
+				년도순
+				</label>
+	
+				<input type="radio" name="order" value="orderByRate" id="idRate"/>
+				<label for="idRate">
+				평점순
+				</label>
+			
+			
 
-		<!-- 본문 -->
-		<div id=“content”>
-			<!-- 본문 내용 -->
-			<section id=“main-section”>
-				<article>
-					<div class="movie-title">
-						<h1>
-							클레멘타인
-						</h1>
-					</div>
-				</article>
-			</section>
-
-			<!-- 측면 배너 -->
-			<aside id=“main-aside”>
-				<div class="aside-list">
-					
-				</div>
-			</aside>
 		</div>
 
+		<!-- 본문 -->
+		<div id="movie_content">
+			<% for(i=0; i<list.length; i++) { %>
+			<div><% list[i].id %></div> <% } %>
+		</div>
+
+		
+
 	</div>
-	<footer id=“main-footer”>
+	<!-- <footer id=“main-footer”>
 		<a href="#">Created by DBDBDIP</a>
-	</footer>
+	</footer> -->
 </body>
 </html>
