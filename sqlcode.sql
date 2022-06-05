@@ -1,5 +1,7 @@
 # 각자 스키마 이름 넣기
+create database dbproject_navermovie;
 use dbproject_navermovie;
+drop database dbproject_navermovie;
 
 # Movies 테이블
 create table Movies(
@@ -19,7 +21,7 @@ create table Movies(
 
 alter table Movies modify title mediumtext;
 alter table Movies modify summary mediumtext;
-
+select * from Movies;
 
 # text가 너무 클시에 위의 alter mediumtext 필요!
 
@@ -44,7 +46,7 @@ create table Director(
 
 alter table Director modify directorName mediumtext;
 
-# Cast 테이블
+# MovieCast 테이블 (출연진)
 create table MovieCast (
 	cast_id int primary key auto_increment,
     movie_code int,
@@ -58,3 +60,54 @@ create table MovieCast (
 alter table MovieCast modify castName mediumtext;
 alter table MovieCast modify roleName mediumtext;
 alter table MovieCast modify castImg mediumtext;
+
+# Photo 테이블
+create table Photo(
+	photo_id int primary key auto_increment,
+    movie_code int NOT NULL,
+    imageType varchar(50),
+    photoLink varchar(100),
+    foreign key (movie_code) references Movies(movie_code)
+);
+alter table Photo modify photoLink mediumtext;
+
+# Video 테이블
+create table Video(
+	video_id int primary key auto_increment,
+    movie_code int NOT NULL,
+    videoName varchar(50),
+    videoImgsrc varchar(100),
+    videoLink varchar(100),
+    videoDate varchar(100),
+    foreign key (movie_code) references Movies(movie_code)
+);
+alter table Video modify videoName mediumtext;
+alter table Video modify videoLink mediumtext;
+alter table Video modify videoDate mediumtext;
+alter table Video modify videoImgsrc mediumtext;
+
+# Country 테이블
+create table Country(
+	country_id int auto_increment,
+	movie_code int NOT NULL,
+	countryName varchar(50),
+    foreign key (movie_code) references Movies(movie_code)
+);
+
+alter table Country modify countryName mediumtext;
+
+# Rate 테이블
+create table Rate(
+	rate_id  int auto_increment,
+	movie_code int NOT NULL,
+	starScore int,
+	rateInfo varchar(300),
+	writerId varchar(100),
+	rateDate varchar(200),
+	likeNum int,
+	dislikeNume int,
+    foreign key (movie_code) references Movies(movie_code)
+);
+alter table Rate modify rateInfo mediumtext;
+alter table Rate modify writerId mediumtext;
+alter table Rate modify rateDate mediumtext;
