@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>데이터 베이스 기말 과제</title>
+    </head>
+    <body>
+        <h1>네이버 영화 구축</h1>
+        <h4>create by DBDBDIP</h4>
+        <p>총 영화갯수: <%=list.length + "개"%></p>
+        <table border='1'>
+            <colgroup>
+                <col width='100'><col width='100'><col width='150'><col width='150 '><col width='150'><col width='150'><col width='150'><col width='150'><col width='150'>
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>영화코드</th>
+                    <th>제목</th>
+                    <th>관람객 평점</th>
+                    <th>관람객 평점 참여자수</th>
+                    <th>기자/평론가 평점</th>
+                    <th>기자/평론가 평점 참여자수</th>
+                    <th>상영시간</th>
+                    <th>개봉일자</th>
+                    <th>제작년도</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% list.forEach(function(li) { %>
+                    <tr>
+                        <td><%=li.movie_code %></td>
+                        <td><%=li.title %></td>
+                        <td><%=li.audience_rate %></td>
+                        <td><%=li.audience_count + '명'%></td>
+                        <td><%=li.journalist_rate %></td>
+                        <td><%=li.journalist_count + '명'%></td>
+                        <td><%=li.playing_time + '분'%></td>
+                        <td><%=li.opening_date %></td>
+                        <td><%=li.manufacture_year %></td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table border='1'>
+        
+    </body>
+</html>
