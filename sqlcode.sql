@@ -112,3 +112,16 @@ alter table Rate modify rateInfo mediumtext;
 alter table Rate modify writerId mediumtext;
 alter table Rate modify rateDate mediumtext;
 
+# Filmography 테이블
+create table Filmography (
+	f_id int primary key auto_increment,
+    movie_code int NOT NULL,
+    directorName varchar(20),
+    movieTitle varchar(100),
+    movieImg varchar(300),
+    foreign key (movie_code) references Movies(movie_code)
+);
+
+alter table Filmography modify directorName mediumtext;
+alter table Filmography modify movieTitle mediumtext;
+alter table Filmography modify movieImg mediumtext;

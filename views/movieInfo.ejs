@@ -8,14 +8,28 @@
     </head>
     <body>
         <style>
-            img[src$=".gif"], img[src$=".png"] {
-                image-rendering: -moz-crisp-edges; /* Firefox */
-                image-rendering: -o-crisp-edges; /* Opera */
-                image-rendering: -webkit-optimize-contrast;/* Webkit (non-standard naming) */
-                image-rendering: crisp-edges;
-                -ms-interpolation-mode: nearest-neighbor; 
-            }
             
+            div.ui-loader{
+                display: none;
+            }
+            div.ui-corner-all{
+                display: none;
+            }
+            div.ui-body-a{
+                display: none;
+            }
+            div.ui-loader-default{
+                display: none;
+            }
+            div#debugCSSInfoBar {
+                display: none;
+            }
+            span.ui-icon-loading + h1 {
+                display: none;
+            }
+            span.ui-icon-loading {
+                display: none;
+            }
         </style>
         
 
@@ -53,7 +67,7 @@
                     <% castInfoList.forEach(function(info) { %>
                     <div id="actor" width="50px" style="margin-right: 10px;">
                         <img src="<%= info.castImg %>">
-                        <p><strong><%= info.castName %></strong></p>
+                        <p><strong style="color: royalblue;"><%= info.castName %></strong></p>
                         <span style="color: red;"><%= info.mainorsub%></span>
                         <span><%= info.roleName%></span>
                     </div>
@@ -61,30 +75,96 @@
                 </div>
                 <div style="height: 1px; background-color: lightgray; margin-top: 20px; margin-bottom: 20px;"></div>
                     
-                <p><strong>포토</strong></p>
-                <p id="photoInfoListLength" style="display: none;"><%= photoInfoList.length%></p>
-                <div id="photoArea" style="display: flex; justify-content: center; " >
-                    <div style="width: 40px; height: 70px; cursor:pointer; margin-top: 100px; margin-left: 30px; background-color:lightgray;" onclick="clickleft()"> 
-                        <p style="text-align:center; line-height:40px; color:white;"><</p>
-                    </div>
-
-                    <div style="width: 50%; text-align:center; margin-left:80px; margin-right:30px;">
-
-                        <p><strong><%= photoInfoList[0].imageType %></strong></p>
-                        <img src="<%= photoInfoList[0].photoLink %>" style="width: 100%;">
-                        
-                    </div>
-
-                    <div style="width: 40px; height: 70px; cursor:pointer; margin-top: 100px; margin-left:60px; background-color:lightgray;" onclick="clickright()">
-                        <p style="text-align:center; line-height:40px; color:white;">></p>
-                    </div>
+                <p><strong>포토</strong> <%= photoInfoList.length %>건</p>
+                
+                <div id="photoArea" style="display: flex; justify-content: center; flex-wrap: wrap;" >
+                    
+                    <% for (let i=0; i < photoInfoList.length; i++) { %>
+                        <div style="width: 150px; margin-left:20px; margin-right:20px;">
+                            <p style="text-align: center;"><%= photoInfoList[i].imageType %></p>
+                            <img src="<%= photoInfoList[i].photoLink %>" style="width: 100%;">
+                        </div>
+                    <% } %>
+        
                 </div>
                 <div style="height: 1px; background-color: lightgray; margin-top: 20px; margin-bottom: 20px;" ></div>
                 
-                <a href="https://movie.naver.com/movie/bi/mi/mediaView.naver?code=177371&mid=41672#tab">
-                    <img src="https://ssl.pstatic.net/imgmovie/multimedia/MOVIECLIP/TRAILER/41957_20190325023744.jpg">
-                </a>
+                <p><strong>동영상</strong> <%= videoInfoList.length %>건</p>
                 
+                <div id="photoArea" style="display: flex; flex-wrap: wrap; display:hover;">
+                    <% for (let i=0; i < videoInfoList.length; i++) { %>
+                        <div style="width: 200px; height: 80px; display:block; margin-right: 40px; margin-left: 40px, margin-bottom: 40px;">
+                            <a href="<%= videoInfoList[i].videoLink %>" style="display: inline-block; position:relative; width:100%;">
+                                <img src="<%= videoInfoList[i].videoImgsrc %>" style="width: 100%;"> 
+                                <span style="color:white; position:absolute; left:10px; top:110px;">▶</span>
+                            </a>
+                            <strong style="color: royalblue;"><%=videoInfoList[i].videoName %></strong>
+                        </div>
+                        
+                    <% } %>
+                </div>
+                <div style="height: 1px; background-color: lightgray; margin-top: 120px; margin-bottom: 20px;" ></div>
+
+                <p><strong>평점</strong></p>
+                
+                <div id="rateArea" style="border: 1px solid lightgray; display:flex; margin-bottom: 20px;">
+                    <div id="audienceArea" style="width: 50%; text-align: center;">
+                        <p><strong>네티즌/관람객 평점 ▶</strong></p>
+                        <p><strong><%= basicInfo[2]%></strong> 참여 <%= basicInfo[3]%>명</p>
+                    </div>
+                    <div style="width: 1px; height:100px; background-color:lightgray"></div>
+                    <div id="journalistArea" style="width: 50%; text-align: center;">
+                        <p><strong>기자/평론가 평점 ▶</strong></p>
+                        <p><strong><%= basicInfo[4]%></strong> 참여 <%= basicInfo[5]%>명</p>
+                    </div>
+                </div>
+
+                <p><stron>한줄평</stron/g> | 총 <strong><%= rateList.length%>건</strong></p>
+                <div style="height: 1px; background-color: lightgray; margin-bottom: 20px;" ></div>
+
+                <div id="comment" style="display: flex; flex-direction: column; ">
+                    <% for (let i=0; i < rateList.length; i++) { %>
+                        <div style="border: 1px solid lightgray; margin-bottom: 20px; display:flex; border-radius:20px;">
+                            <div id="starSection" style="width: 20%; margin-left:20px;">
+
+                                <% if(rateList[i].starScore == 1 || rateList[i].starScore == 2) { %>
+                                    <p><strong style="color: red;">★☆☆☆☆   </strong><strong><%= rateList[i].starScore %></strong></p>
+    
+                                <% } else if(rateList[i].starScore == 3 || rateList[i].starScore == 4) { %>
+                                    <p><strong style="color: red;">★★☆☆☆   </strong><strong><%= rateList[i].starScore %></strong></p>
+                                <% } else if(rateList[i].starScore == 5 || rateList[i].starScore == 6) { %>
+                                    <p><strong style="color: red;">★★★☆☆   </strong><strong><%= rateList[i].starScore %></strong></p>
+                                <% } else if(rateList[i].starScore == 7 || rateList[i].starScore == 8) { %>
+                                    <p><strong style="color: red;">★★★★☆   </strong><strong><%= rateList[i].starScore %></strong></p>
+                                <% } else if(rateList[i].starScore == 9 || rateList[i].starScore == 10) { %>
+                                    <p><strong style="color: red;">★★★★★   </strong><strong><%= rateList[i].starScore %></strong></p>
+                                <% } %>
+    
+                            </div>
+                            <div id="infoSection" style="width: 80%; display:relative; margin-right:20px;">
+                                <p><%= rateList[i].rateInfo %></p>
+                                <p><%= rateList[i].writerId %>  |  <%= rateList[i].rateDate %></p>
+                                <div style="float:right; width:200px; margin-bottom:20px;">
+                                    <strong style="color: blue;">좋아요 <%= rateList[i].likeNum%>   </strong><strong style="color: red;">싫어요  <%= rateList[i].dislikeNum%></strong>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+                <div style="height: 1px; background-color: lightgray; margin-bottom: 20px;" ></div>
+                <p><strong>필모그래피</strong></p>
+                <div id="filmoArea" style="display: flex; flex-wrap:wrap;">
+                    
+                    <% for (let i=0; i < filmoList.length; i++) { %>
+                        
+                        <div style="width:180px; margin-right:10px;">
+                            <img src="<%= filmoList[i].movieImg %>" style="display: inline-block;">
+                            <p><strong style="color: royalblue;"><%= filmoList[i].movieTitle %></strong></p>
+                            <p><span style="color: red;">감독 </span><strong><%= filmoList[i].directorName%></strong></p>
+                        </div>
+
+                    <% } %>
+                </div>
 
             </div>
             
@@ -94,31 +174,6 @@
                 <img src="<%= basicInfo[8] %>" style="width:50%; padding-left:30px;">
             </div>
         </div>
-
-        <script>
-            let photoIndex = 0;
-        
-            let lenInfo = parseInt(document.getElementById("photoInfoListLength").innerHTML);
-            console.log(lenInfo);
-
-            function clickleft() {
-                
-                if(photoIndex == 0) 
-                photoIndex = lenInfo - 1;
-                
-                else 
-                photoIndex -= 1;
-            };
-            function clickright() {
-                if(photoIndex == lenInfo - 1) 
-                    photoIndex = 0;
-                
-                else 
-                    photoIndex += 1;
-            };
-            
-            
-        </script>
 
     </body>
 </html>
