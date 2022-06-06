@@ -4,7 +4,8 @@ var db_info = {
     port: '3306',
     user: 'root',
     password: 'Shin5633^^',
-    database: 'dbproject_navermovie'
+    database: 'dbproject_navermovie',
+    multipleStatements: true
 }
 
 module.exports = {

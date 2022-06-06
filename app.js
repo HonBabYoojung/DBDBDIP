@@ -42,32 +42,18 @@ app.get('/movies_orderByRate', function (req, res) {
     });
 });
 
-// app.get('/movieInfo', function (req, res) {
-//     res.render('movieInfo.ejs');
-// });
 
-// app.post('/movieCodeTest', function (req, res) {
-    
-//     let body = req.body;
-//     console.log(body);
-//     res.end("code 전송받음!")
-//     //var code = parseInt(req.body.movie_code);
-
-//     // var sql = `SELECT * FROM movies where movie_code = ${req.body.movie_code}`
-//     // conn.query(sql, function (err, rows, fields) {
-//     //     if(err) console.log('query is not excuted. select fail...\n' + err);
-//     //     else res.redirect("/movieInfo", {list: rows});
-//     // });
-// });
 router.route('/movies_orderByName').get((req, res)=>{
     res.render('movies_orderByName.ejs');
 });
 
 router.route('/movieInfo').post((req, res)=>{
     console.log('output 처리함')
-    var mcode = parseInt(req.body.movie_code)    
+    var mcode = req.body.movie_code
 
-    var sql = `SELECT distinct title, manufacture_year, audience_rate, audience_count, journalist_rate, journalist_count, scopeName, countryName, playing_time, opening_date, directorName, castName, image FROM movies m, country co, director d, moviecast mc, scope s where m.movie_code = co.movie_code and m.movie_code = d.movie_code and mc.movie_code = m.movie_code and s.movie_code = m.movie_code and m.movie_code = ${mcode}`;    
+    var sql = `SELECT distinct title, manufacture_year, audience_rate, audience_count, journalist_rate, journalist_count, countryName, playing_time, opening_date, directorName, castName, image, summary FROM movies m, country co, director d, moviecast mc, scope s where m.movie_code = co.movie_code and m.movie_code = d.movie_code and mc.movie_code = m.movie_code and s.movie_code = m.movie_code and m.movie_code = ${mcode};` 
+    +  `SELECT distinct castName, mainorsub, roleName, castImg FROM movies m, moviecast mc WHERE m.movie_code = mc.movie_code and m.movie_code = ${mcode};`
+    + `SELECT distinct imageType, photoLink FROM photo p, movies m WHERE p.movie_code = m.movie_code and m.movie_code = ${mcode};`
     conn.query(sql, function (err, rows, fields) {
         if(err) console.log('query is not excuted. select fail...\n' + err);
         else {
@@ -78,7 +64,11 @@ router.route('/movieInfo').post((req, res)=>{
             director = []; // directorName 여러개
             cast = []; // castName 여러개
             
-            rows.map((rowData, index) => {
+            castInfoList = []; // 배우/제작진 상세정보 리스트
+
+            photoInfoList = []; // 포토 상세정보 리스트
+            
+            rows[0].map((rowData, index) => {
                 console.log(rowData);
                 if(index == 0) {
                     
@@ -88,12 +78,11 @@ router.route('/movieInfo').post((req, res)=>{
                     basicInfo.push(rowData.audience_count);
                     basicInfo.push(rowData.journalist_rate);
                     basicInfo.push(rowData.journalist_count);
-                    
-                    
                     basicInfo.push(rowData.playing_time);
                     var newdate = moment(rowData.opening_date).utc().format('YYYY-MM-DD');
                     basicInfo.push(newdate);
                     basicInfo.push(rowData.image);
+                    basicInfo.push(rowData.summary);
                     scope.push(rowData.scopeName);
                     country.push(rowData.countryName);
                     director.push(rowData.directorName);
@@ -117,16 +106,26 @@ router.route('/movieInfo').post((req, res)=>{
             console.log(countryList);
             console.log(directorList);
             console.log(castList);
-            res.render('movieInfo.ejs', { basicInfo, scopeList, countryList, directorList, castList });
+
+            
+
+            rows[1].map((row) => {
+                castInfoList.push(row)
+            })
+
+            rows[2].map((row) => {
+                console.log(row)
+                photoInfoList.push(row)
+            })
+            
+            res.render('movieInfo.ejs', { basicInfo, scopeList, countryList, directorList, castList, castInfoList, photoInfoList, photoNum: 0 });
         }
     });
 
     //res.render('movieInfo.ejs', user);
 });
 app.use('/', router);
-
-
-// app.use(express.static("./"));
+app.use(express.static("./"));
 // app.get('/write', function (req, res) {
 //     res.render('write.ejs');
 // });

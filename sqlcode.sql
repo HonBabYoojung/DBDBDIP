@@ -80,12 +80,10 @@ create table Video(
     videoName varchar(50),
     videoImgsrc varchar(100),
     videoLink varchar(100),
-    videoDate varchar(100),
     foreign key (movie_code) references Movies(movie_code)
 );
 alter table Video modify videoName mediumtext;
 alter table Video modify videoLink mediumtext;
-alter table Video modify videoDate mediumtext;
 alter table Video modify videoImgsrc mediumtext;
 
 # Country 테이블
@@ -107,7 +105,7 @@ create table Rate(
 	writerId varchar(100),
 	rateDate varchar(200),
 	likeNum int,
-	dislikeNume int,
+	dislikeNum int,
     foreign key (movie_code) references Movies(movie_code)
 );
 alter table Rate modify rateInfo mediumtext;

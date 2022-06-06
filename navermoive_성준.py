@@ -542,8 +542,8 @@ def gen_video_table() :
     # ul은 list 형태
     
     # movie 테이블에 행들을 추가하기 위한 sql문
-    insert_sql = """insert into Video(movie_code,videoName,videoImgsrc,videoLink,videoDate)
-                values(%s, %s, %s, %s ,%s)"""
+    insert_sql = """insert into Video(movie_code,videoName,videoImgsrc,videoLink)
+                values(%s, %s, %s, %s)"""
     
     # 받아온 데이터 튜플들을 넣어둘 buffer 배열
     buffer = []
@@ -567,59 +567,28 @@ def gen_video_table() :
             
                 movie_soup = BeautifulSoup(urllib.request.urlopen(movie_url).read(), "html.parser")
                 
-                isVideo1 = movie_soup.find("a", title="동영상")
-                if isVideo1 is None:
-                    buffer.append((movie_code, None,None,None,None))
-                    print("No Video1")
+                isVideo = movie_soup.find("ul", class_="video_thumb")
+                if isVideo is None:
+                    buffer.append((movie_code, None,None,None))
+                    print("No Video")
                 
                 else:
-                    curl = "https://movie.naver.com/movie/bi/mi/media.naver?code=" + str(movie_code)
-                    csoup = BeautifulSoup(urllib.request.urlopen(curl).read(), "html.parser")
                     
-                    isVideo2 = csoup.find("div", class_="ifr_trailer")
-                    if isVideo2 is None:
-                        buffer.append((movie_code, None,None,None,None))
-                        print("No Video2")
-                    else:
-                      for video in isVideo2.find_all("li") :
+                    vlist = isVideo.find_all("li")
+    
+                    for i, video in enumerate(vlist) :
                         videoName = video.find("a",class_="video_obj")["title"]
-                        print(videoName)
                         videoImgsrc = video.find("img")["src"]
                         videoLink = "https://movie.naver.com" + video.find("a",class_="video_obj")["href"]
-                        videoDate = csoup.find("p",class_="video_date").get_text()
-                        tuple = (movie_code,videoName,videoImgsrc,videoLink,videoDate)
-                        buffer.append(tuple)
-                        #print(movie_id,"의 감독 :", director)
-                        # if photo.find("p", class_="p_thumb") :
-                        #     try:
-                        #         castImg = cast.find("p", class_="p_thumb").find("img")["src"]
-                        #     except:
-                        #         castImg = None
-                        #     try: 
-                        #         castName = cast.find("div", class_="p_info").find("a").get_text()
-                        #     except:
-                        #         castName = None
-                                
-                        #     try: 
-                        #         mainorsub = cast.find("p", class_="in_prt").find("em").get_text()
-                                
-                        #     except: 
-                        #         mainorsub = None
-                                
-                        #     try:
-                        #         roleName = cast.find("p", class_="pe_cmt").find("span").get_text()
-                                
-                        #     except: 
-                        #         roleName = None
-
                         
-
-
+                        tuple = (movie_code,videoName,videoImgsrc,videoLink)
+                        buffer.append(tuple)
 
                 # 중복 제거를 위한 절차
                 buffer_set = set(buffer)
                 buffer = list(buffer_set)
                 count += 1
+                
                 
 
                 if len(buffer) % 1000 == 0 :
@@ -811,5 +780,5 @@ if __name__ == '__main__' :
     #gen_country_table()
     #gen_photo_table()
     # gen_country_table()
-    #gen_video_table()
-    gen_rate_table()
+    gen_video_table()
+    #gen_rate_table()

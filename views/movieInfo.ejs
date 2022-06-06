@@ -7,18 +7,30 @@
         <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
     </head>
     <body>
+        <style>
+            img[src$=".gif"], img[src$=".png"] {
+                image-rendering: -moz-crisp-edges; /* Firefox */
+                image-rendering: -o-crisp-edges; /* Opera */
+                image-rendering: -webkit-optimize-contrast;/* Webkit (non-standard naming) */
+                image-rendering: crisp-edges;
+                -ms-interpolation-mode: nearest-neighbor; 
+            }
+            
+        </style>
         
 
         <h1>네이버 영화 구축</h1>
         <h4>create by DBDBDIP</h4>
         <div id="moveInfo" style="display: flex; width:100%; padding: 50px;">
-            <div id="leftInfo" style="width: 60%;">
+            <div id="leftInfo" style="width: 70%;">
                 <h1><%= basicInfo[0]%></h1>
                 <h3 style="color: gray;"><%= basicInfo[1]%></h3>
                 <div style="height: 1px; background-color: lightgray;"></div>
+
                 <p><strong>관람객 평점 :</strong> <%= basicInfo[2]%> <strong>참여자 수 :</strong> <%= basicInfo[3]%> 명</p>
                 <p><strong>기자/평론가 평점 :</strong> <%= basicInfo[4]%> <strong>참여자 수 :</strong> <%= basicInfo[5]%> 명</p>
                 <div style="height: 1px; background-color: lightgray; margin-bottom: 20px;"></div>
+                
                 <strong>개요 : </strong><% scopeList.forEach(function(scope) { %> <span><%= scope %></span> <% }); %>
                 <span>|</span>
                 <strong><% countryList.forEach(function(country) { %> <span><%= country %></span> <% }); %></strong>
@@ -30,14 +42,83 @@
                 <p><strong>감독 : </strong><% directorList.forEach(function(director) { %> <span><%= director %></span> <% }); %></p>
                 <p><strong>출연 : </strong><% castList.forEach(function(cast) { %> <span><%= cast %></span> <% }); %></p>
                 <p><strong>등급 : </strong>15세 관람가</p>
+                <div style="height: 1px; background-color: lightgray; margin-bottom: 20px;"></div>
+
+                <p><strong>줄거리</strong></p>
+                <p><%= basicInfo[9] %></p>
+                <div style="height: 1px; background-color: lightgray; margin-bottom: 20px;"></div>
+                
+                <p><strong>배우/제작진</strong></p>
+                <div id="castList" style="display: flex;"> 
+                    <% castInfoList.forEach(function(info) { %>
+                    <div id="actor" width="50px" style="margin-right: 10px;">
+                        <img src="<%= info.castImg %>">
+                        <p><strong><%= info.castName %></strong></p>
+                        <span style="color: red;"><%= info.mainorsub%></span>
+                        <span><%= info.roleName%></span>
+                    </div>
+                    <% }); %>
+                </div>
+                <div style="height: 1px; background-color: lightgray; margin-top: 20px; margin-bottom: 20px;"></div>
+                    
+                <p><strong>포토</strong></p>
+                <p id="photoInfoListLength" style="display: none;"><%= photoInfoList.length%></p>
+                <div id="photoArea" style="display: flex; justify-content: center; " >
+                    <div style="width: 40px; height: 70px; cursor:pointer; margin-top: 100px; margin-left: 30px; background-color:lightgray;" onclick="clickleft()"> 
+                        <p style="text-align:center; line-height:40px; color:white;"><</p>
+                    </div>
+
+                    <div style="width: 50%; text-align:center; margin-left:80px; margin-right:30px;">
+
+                        <p><strong><%= photoInfoList[0].imageType %></strong></p>
+                        <img src="<%= photoInfoList[0].photoLink %>" style="width: 100%;">
+                        
+                    </div>
+
+                    <div style="width: 40px; height: 70px; cursor:pointer; margin-top: 100px; margin-left:60px; background-color:lightgray;" onclick="clickright()">
+                        <p style="text-align:center; line-height:40px; color:white;">></p>
+                    </div>
+                </div>
+                <div style="height: 1px; background-color: lightgray; margin-top: 20px; margin-bottom: 20px;" ></div>
+                
+                <a href="https://movie.naver.com/movie/bi/mi/mediaView.naver?code=177371&mid=41672#tab">
+                    <img src="https://ssl.pstatic.net/imgmovie/multimedia/MOVIECLIP/TRAILER/41957_20190325023744.jpg">
+                </a>
+                
+
             </div>
             
             
             
-            <div id="rightInfo" style="width: 40%">
-                <img src="">
+            <div id="rightInfo" style="width: 30%;">
+                <img src="<%= basicInfo[8] %>" style="width:50%; padding-left:30px;">
             </div>
         </div>
+
+        <script>
+            let photoIndex = 0;
+        
+            let lenInfo = parseInt(document.getElementById("photoInfoListLength").innerHTML);
+            console.log(lenInfo);
+
+            function clickleft() {
+                
+                if(photoIndex == 0) 
+                photoIndex = lenInfo - 1;
+                
+                else 
+                photoIndex -= 1;
+            };
+            function clickright() {
+                if(photoIndex == lenInfo - 1) 
+                    photoIndex = 0;
+                
+                else 
+                    photoIndex += 1;
+            };
+            
+            
+        </script>
 
     </body>
 </html>

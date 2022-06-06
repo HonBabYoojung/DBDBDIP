@@ -11,14 +11,7 @@
         <h1>네이버 영화 구축</h1>
         <h4>create by DBDBDIP</h4>
         <p>총 영화갯수: <%=list.length + "개"%></p>
-        <div style="display: flex; margin-bottom:20px;">
-            <!-- <input type="text" id="movie_code" style="margin-right: 20px;"/>
-            <input type="submit" id="movie_info_btn"> -->
-            <form action="/movieInfo" method="post">
-                영화코드: <input type="text" name="movie_code" style="margin-right: 20px;"/>
-                <button type="submit">검색</button>
-            </form>
-        </div>
+        
 
         <table border='1'>
             <colgroup>
@@ -39,7 +32,7 @@
             </thead>
             <tbody >
                 <% list.forEach(function(li) { %>
-                    <tr style='cursor: pointer'>
+                    <tr>
                         <td><%=li.movie_code %></td>
                         <td><%=li.title %></td>
                         <td><%=li.audience_rate %></td>
