@@ -771,7 +771,7 @@ def gen_rate_table() :
                     curl = "https://movie.naver.com/movie/bi/mi/point.naver?code=" + str(movie_code)
                     csoup = BeautifulSoup(urllib.request.urlopen(curl).read(), "html.parser")
                     
-                    rateul = csoup.select("body > div > div")
+                    rateul = csoup.find("div", class_="ifr_module2")
                     #print(castul)
                     print(rateul)
                     #print(directorList)
