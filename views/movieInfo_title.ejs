@@ -1,0 +1,179 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>데이터 베이스 기말 과제</title>
+        
+        <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    </head>
+    <body>
+        <style>
+            
+            div.ui-loader{
+                display: none;
+            }
+            div.ui-corner-all{
+                display: none;
+            }
+            div.ui-body-a{
+                display: none;
+            }
+            div.ui-loader-default{
+                display: none;
+            }
+            div#debugCSSInfoBar {
+                display: none;
+            }
+            span.ui-icon-loading + h1 {
+                display: none;
+            }
+            span.ui-icon-loading {
+                display: none;
+            }
+        </style>
+        
+
+        <h1>네이버 영화 구축</h1>
+        <h4>create by DBDBDIP</h4>
+        <div id="moveInfo" style="display: flex; width:100%; padding: 50px;">
+            <div id="leftInfo" style="width: 70%;">
+                <h1><%= basicInfo[0]%></h1>
+                <h3 style="color: gray;"><%= basicInfo[1]%></h3>
+                <div style="height: 1px; background-color: lightgray;"></div>
+
+                <p><strong>관람객 평점 :</strong> <%= basicInfo[2]%> <strong>참여자 수 :</strong> <%= basicInfo[3]%> 명</p>
+                <p><strong>기자/평론가 평점 :</strong> <%= basicInfo[4]%> <strong>참여자 수 :</strong> <%= basicInfo[5]%> 명</p>
+                <div style="height: 1px; background-color: lightgray; margin-bottom: 20px;"></div>
+                
+                <strong>개요 : </strong><% scopeList.forEach(function(scope) { %> <span><%= scope %></span> <% }); %>
+                <span>|</span>
+                <strong><% countryList.forEach(function(country) { %> <span><%= country %></span> <% }); %></strong>
+                <span>|</span>
+                <strong><%= basicInfo[6]%> 분</strong>
+                <span>|</span>
+                <strong><%= basicInfo[7]%> 개봉</strong>
+
+                <p><strong>감독 : </strong><% directorList.forEach(function(director) { %> <span><%= director %></span> <% }); %></p>
+                <p><strong>출연 : </strong><% castList.forEach(function(cast) { %> <span><%= cast %></span> <% }); %></p>
+                <p><strong>등급 : </strong>15세 관람가</p>
+                <div style="height: 1px; background-color: lightgray; margin-bottom: 20px;"></div>
+
+                <p><strong>줄거리</strong></p>
+                <p><%= basicInfo[9] %></p>
+                <div style="height: 1px; background-color: lightgray; margin-bottom: 20px;"></div>
+                
+                <p><strong>배우/제작진</strong></p>
+                <div id="castList" style="display: flex;"> 
+                    <% castInfoList.forEach(function(info) { %>
+                    <div id="actor" width="50px" style="margin-right: 10px;">
+                        <img src="<%= info.castImg %>">
+                        <p><strong style="color: royalblue;"><%= info.castName %></strong></p>
+                        <span style="color: red;"><%= info.mainorsub%></span>
+                        <span><%= info.roleName%></span>
+                    </div>
+                    <% }); %>
+                </div>
+                <div style="height: 1px; background-color: lightgray; margin-top: 20px; margin-bottom: 20px;"></div>
+                    
+                <p><strong>포토</strong> <%= photoInfoList.length %>건</p>
+                
+                <div id="photoArea" style="display: flex; justify-content: center; flex-wrap: wrap;" >
+                    
+                    <% for (let i=0; i < photoInfoList.length; i++) { %>
+                        <div style="width: 150px; margin-left:20px; margin-right:20px;">
+                            <p style="text-align: center;"><%= photoInfoList[i].imageType %></p>
+                            <img src="<%= photoInfoList[i].photoLink %>" style="width: 100%;">
+                        </div>
+                    <% } %>
+        
+                </div>
+                <div style="height: 1px; background-color: lightgray; margin-top: 20px; margin-bottom: 20px;" ></div>
+                
+                <p><strong>동영상</strong> <%= videoInfoList.length %>건</p>
+                
+                <div id="photoArea" style="display: flex; flex-wrap: wrap; display:hover;">
+                    <% for (let i=0; i < videoInfoList.length; i++) { %>
+                        <div style="width: 200px; height: 80px; display:block; margin-right: 40px; margin-left: 40px, margin-bottom: 40px;">
+                            <a href="<%= videoInfoList[i].videoLink %>" style="display: inline-block; position:relative; width:100%;">
+                                <img src="<%= videoInfoList[i].videoImgsrc %>" style="width: 100%;"> 
+                                <span style="color:white; position:absolute; left:10px; top:110px;">▶</span>
+                            </a>
+                            <strong style="color: royalblue;"><%=videoInfoList[i].videoName %></strong>
+                        </div>
+                        
+                    <% } %>
+                </div>
+                <div style="height: 1px; background-color: lightgray; margin-top: 120px; margin-bottom: 20px;" ></div>
+
+                <p><strong>평점</strong></p>
+                
+                <div id="rateArea" style="border: 1px solid lightgray; display:flex; margin-bottom: 20px;">
+                    <div id="audienceArea" style="width: 50%; text-align: center;">
+                        <p><strong>네티즌/관람객 평점 ▶</strong></p>
+                        <p><strong><%= basicInfo[2]%></strong> 참여 <%= basicInfo[3]%>명</p>
+                    </div>
+                    <div style="width: 1px; height:100px; background-color:lightgray"></div>
+                    <div id="journalistArea" style="width: 50%; text-align: center;">
+                        <p><strong>기자/평론가 평점 ▶</strong></p>
+                        <p><strong><%= basicInfo[4]%></strong> 참여 <%= basicInfo[5]%>명</p>
+                    </div>
+                </div>
+
+                <p><stron>한줄평</stron/g> | 총 <strong><%= rateList.length%>건</strong></p>
+                <div style="height: 1px; background-color: lightgray; margin-bottom: 20px;" ></div>
+
+                <div id="comment" style="display: flex; flex-direction: column; ">
+                    <% for (let i=0; i < rateList.length; i++) { %>
+                        <div style="border: 1px solid lightgray; margin-bottom: 20px; display:flex; border-radius:20px;">
+                            <div id="starSection" style="width: 20%; margin-left:20px;">
+
+                                <% if(rateList[i].starScore == 1 || rateList[i].starScore == 2) { %>
+                                    <p><strong style="color: red;">★☆☆☆☆   </strong><strong><%= rateList[i].starScore %></strong></p>
+    
+                                <% } else if(rateList[i].starScore == 3 || rateList[i].starScore == 4) { %>
+                                    <p><strong style="color: red;">★★☆☆☆   </strong><strong><%= rateList[i].starScore %></strong></p>
+                                <% } else if(rateList[i].starScore == 5 || rateList[i].starScore == 6) { %>
+                                    <p><strong style="color: red;">★★★☆☆   </strong><strong><%= rateList[i].starScore %></strong></p>
+                                <% } else if(rateList[i].starScore == 7 || rateList[i].starScore == 8) { %>
+                                    <p><strong style="color: red;">★★★★☆   </strong><strong><%= rateList[i].starScore %></strong></p>
+                                <% } else if(rateList[i].starScore == 9 || rateList[i].starScore == 10) { %>
+                                    <p><strong style="color: red;">★★★★★   </strong><strong><%= rateList[i].starScore %></strong></p>
+                                <% } %>
+    
+                            </div>
+                            <div id="infoSection" style="width: 80%; display:relative; margin-right:20px;">
+                                <p><%= rateList[i].rateInfo %></p>
+                                <p><%= rateList[i].writerId %>  |  <%= rateList[i].rateDate %></p>
+                                <div style="float:right; width:200px; margin-bottom:20px;">
+                                    <strong style="color: blue;">좋아요 <%= rateList[i].likeNum%>   </strong><strong style="color: red;">싫어요  <%= rateList[i].dislikeNum%></strong>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+                <div style="height: 1px; background-color: lightgray; margin-bottom: 20px;" ></div>
+                <p><strong>필모그래피</strong></p>
+                <div id="filmoArea" style="display: flex; flex-wrap:wrap;">
+                    
+                    <% for (let i=0; i < filmoList.length; i++) { %>
+                        
+                        <div style="width:180px; margin-right:10px;">
+                            <img src="<%= filmoList[i].movieImg %>" style="display: inline-block;">
+                            <p><strong style="color: royalblue;"><%= filmoList[i].movieTitle %></strong></p>
+                            <p><span style="color: red;">감독 </span><strong><%= filmoList[i].directorName%></strong></p>
+                        </div>
+
+                    <% } %>
+                </div>
+
+            </div>
+            
+            
+            
+            <div id="rightInfo" style="width: 30%;">
+                <img src="<%= basicInfo[8] %>" style="width:50%; padding-left:30px;">
+            </div>
+        </div>
+
+    </body>
+</html>

@@ -2,11 +2,17 @@
     <head>
         <meta charset="utf-8">
         <title>데이터 베이스 기말 과제</title>
+        <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
     </head>
     <body>
+        
+
         <h1>네이버 영화 구축</h1>
         <h4>create by DBDBDIP</h4>
         <p>총 영화갯수: <%=list.length + "개"%></p>
+        
+
         <table border='1'>
             <colgroup>
                 <col width='100'><col width='100'><col width='150'><col width='150 '><col width='150'><col width='150'><col width='150'><col width='150'><col width='150'>
@@ -24,9 +30,9 @@
                     <th>제작년도</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody >
                 <% for(let i=0; i < list.length; i++) { %>
-                    <tr style="cursor: pointer;" onclick="location.href='./movies_orderByJournalist/<%= list[i].movie_code %>'">
+                    <tr style="cursor: pointer;" onclick="location.href='./movieInfo_actor/<%= list[i].movie_code %>'">
                         <td id="movieId<%= i%>" ><%=list[i].movie_code %></td>
                         <td><%=list[i].title %></td>
                         <td><%=list[i].audience_rate %></td>

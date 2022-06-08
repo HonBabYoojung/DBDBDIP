@@ -25,19 +25,19 @@
                 </tr>
             </thead>
             <tbody>
-                <% list.forEach(function(li) { %>
-                    <tr>
-                        <td><%=li.movie_code %></td>
-                        <td><%=li.title %></td>
-                        <td><%=li.audience_rate %></td>
-                        <td><%=li.audience_count + '명'%></td>
-                        <td><%=li.journalist_rate %></td>
-                        <td><%=li.journalist_count + '명'%></td>
-                        <td><%=li.playing_time + '분'%></td>
-                        <td><%=li.opening_date %></td>
-                        <td><%=li.manufacture_year %></td>
+                <% for(let i=0; i < list.length; i++) { %>
+                    <tr style="cursor: pointer;" onclick="location.href='./movies_orderByRate/<%= list[i].movie_code %>'">
+                        <td id="movieId<%= i%>" ><%=list[i].movie_code %></td>
+                        <td><%=list[i].title %></td>
+                        <td><%=list[i].audience_rate %></td>
+                        <td><%=list[i].audience_count + '명'%></td>
+                        <td><%=list[i].journalist_rate %></td>
+                        <td><%=list[i].journalist_count + '명'%></td>
+                        <td><%=list[i].playing_time + '분'%></td>
+                        <td><%=list[i].opening_date %></td>
+                        <td ><%=list[i].manufacture_year %></td>
                     </tr>
-                <% }); %>
+                <% }; %>
             </tbody>
         </table border='1'>
         

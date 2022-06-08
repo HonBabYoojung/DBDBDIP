@@ -520,24 +520,18 @@ def gen_video_table() :
     close_db(conn, cur)
 
 def gen_country_table() :
-    
     conn, cur = open_db()
-    
     # 네이버 현재상영영화 사이트 url
     # 15세 관람가 영화 리스트 링크
     url = "https://movie.naver.com/movie/sdb/browsing/bmovie.naver?grade=1001003"
-    
     # request로 받아온 텍스트형태의 html를 soup 객체로 변환
     soup = BeautifulSoup(urllib.request.urlopen(url).read(), "html.parser")
-    
     # ul.lst_detail_t1 -> 영화 정보 리스트 -> 여기서 li 태그들을 모두 가져옴
     ul = soup.find("ul", class_="directory_list").find_all("li")
     # ul은 list 형태
-    
     # movie 테이블에 행들을 추가하기 위한 sql문
     insert_sql = """insert into Country(movie_code, countryName)
                 values(%s, %s)"""
-    
     # 받아온 데이터 튜플들을 넣어둘 buffer 배열
     buffer = []
     count = 0
@@ -555,9 +549,7 @@ def gen_country_table() :
                 
                 codeList = a["href"].split("=")
                 movie_code = int(codeList[1])
-            
                 movie_url = "https://movie.naver.com" + a["href"]
-                
                 movie_soup = BeautifulSoup(urllib.request.urlopen(movie_url).read(), "html.parser")
                 try:                 
                     links = movie_soup.find("dl", class_="info_spec").find_all("a")
@@ -569,16 +561,13 @@ def gen_country_table() :
                             # buffer배열에 튜플 넣어주기
                             print(country.get_text())
                             sl.append(tuple)
-
                     if len(sl) == 0 :
                         buffer.append((movie_code, None))
-                    
                     else :    
                         for s in sl :
                             buffer.append(s)
                 except:
                     buffer.append((movie_code, None))
-                
                 # 중복값 제거
                 bufferset = set(buffer)
                 buffer = list(bufferset)
