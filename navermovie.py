@@ -786,7 +786,7 @@ def gen_filmo_table() :
     ul = soup.find("ul", class_="directory_list").find_all("li")
     # ul은 list 형태
     
-    # movie 테이블에 행들을 추가하기 위한 sql문
+    # Filmography 테이블에 행들을 추가하기 위한 sql문
     insert_sql = """insert into Filmography(movie_code, directorName, movieTitle, movieImg)
                 values(%s, %s, %s, %s)"""
     
@@ -801,33 +801,39 @@ def gen_filmo_table() :
         a_list = soup.find("ul", class_="directory_list").find_all("a")
 
         for i, a in enumerate(a_list):
-            # 영화 제목 title\
-            print(count)
+            
             if a["href"].find("/movie") != -1 :
                 
                 codeList = a["href"].split("=")
+                
+                # 영화 코드값
                 movie_code = int(codeList[1])
             
                 movie_url = "https://movie.naver.com" + a["href"]
             
                 movie_soup = BeautifulSoup(urllib.request.urlopen(movie_url).read(), "html.parser")
                 
+                # 영화의 감독 정보가 있는지 없는지 판별
                 isDirector = movie_soup.find("dt", class_="step2")
                 if isDirector == None:
                     buffer.append((movie_code, None, None, None))  
                 
                 else: 
+                    # 감독이 여러명 존재할 경우, 각 감독들을 directorList에 넣어주기
                     directorList = movie_soup.find("dl", class_="info_spec").find_all("dd")[1].find("p").find_all("a")
-                    #print(directorList)
+                    
                     for i, director in enumerate(directorList) :
-                        #print(movie_id,"의 감독 :", director)
+                        #  각 감독마다의 필모그래피 페이지로 넘어가기 
                         durl = "https://movie.naver.com" + director["href"]
                         dsoup = BeautifulSoup(urllib.request.urlopen(durl).read(), "html.parser")
                         
                         titleList = dsoup.find_all("p", class_="pilmo_thumb")
                         
                         for i, s in enumerate(titleList) :
+                            # 필모그래피 영화 이름
                             movieTitle = s.find("a").find("img")["alt"]
+                            
+                            # 필모그래피 영화 이미지 주소 
                             movieImg = s.find("a").find("img")["src"]
                             tuple = (movie_code, director.get_text(), movieTitle, movieImg)
                             # buffer배열에 튜플 넣어주기
@@ -862,13 +868,13 @@ def gen_filmo_table() :
 
 # 실행하는 파일이 자기자신일 경우, 함수 실행
 if __name__ == '__main__' :
-    # gen_movie_table()
-    # gen_scope_table()
-    # gen_director_table()
-    # gen_cast_table()
-    #gen_country_table()
-    #gen_photo_table()
-    # gen_country_table()
-    #gen_video_table()
-    #gen_rate_table()
+    gen_movie_table()
+    gen_scope_table()
+    gen_director_table()
+    gen_cast_table()
+    gen_country_table()
+    gen_photo_table()
+    gen_country_table()
+    gen_video_table()
+    gen_rate_table()
     gen_filmo_table()

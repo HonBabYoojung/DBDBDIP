@@ -36,17 +36,6 @@ create table Scope(
 
 alter table Scope modify scopeName mediumtext;
 
-# Director 테이블
-create table Director(
-	d_id int primary key auto_increment,
-    movie_code int,
-    directorName varchar(100),
-    filmoCode int,
-    foreign key (movie_code) references Movies(movie_code)
-);
-
-alter table Director modify directorName mediumtext;
-
 # MovieCast 테이블 (출연진)
 create table MovieCast (
 	cast_id int primary key auto_increment,

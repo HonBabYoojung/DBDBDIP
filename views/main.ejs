@@ -25,6 +25,11 @@
                 color:white;
                 transition: all 0.5s;
             }
+            button#orderByJournalist:hover{
+                background-color: black;
+                color:white;
+                transition: all 0.5s;
+            }
         </style>
         <h1>네이버 영화 구축</h1>
         <h4>create by DBDBDIP</h4>
@@ -33,7 +38,8 @@
             <button id="orderByTitle" style="width:100px; height: 50px; margin-right: 10px;  cursor: pointer" onclick="location.href='./movies_orderByName'">제목순</button>
             <button id="orderByCode" style="width:100px; height: 50px; margin-right: 10px; cursor: pointer" onclick="location.href='./movies_orderByCode'">코드순</button>
             <button id="orderByYear" style="width:100px; height: 50px; margin-right: 10px;  cursor: pointer" onclick="location.href='./movies_orderByYear'">개봉년도순</button>
-            <button id="orderByRate" style="width:100px; height: 50px; margin-right: 10px;  cursor: pointer" onclick="location.href='./movies_orderByRate'">평점순</button>
+            <button id="orderByRate" style="width:100px; height: 50px; margin-right: 10px;  cursor: pointer" onclick="location.href='./movies_orderByRate'">관람객 평점순</button>
+            <button id="orderByJournalist" style="width:100px; height: 50px; margin-right: 10px;  cursor: pointer" onclick="location.href='./movies_orderByJournalist'">기자/평론가 평점순</button>
         </div>
         <form style="margin-top: 20px;" action="/movieInfo" method="post">
             영화코드: <input type="text" name="movie_code" style="margin-right: 20px;"/>

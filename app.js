@@ -50,6 +50,14 @@ app.get('/movies_orderByRate', function (req, res) {
     });
 });
 
+app.get('/movies_orderByJournalist', function (req, res) {
+    var sql = 'SELECT * FROM movies where journalist_rate is not null order by journalist_rate desc;';    
+    conn.query(sql, function (err, rows, fields) {
+        if(err) console.log('query is not excuted. select fail...\n' + err);
+        else res.render('movies_orderByJournalist.ejs', {list : rows});
+    });
+});
+
 
 router.route('/movies_orderByName').get((req, res)=>{
     res.render('movies_orderByName.ejs');
