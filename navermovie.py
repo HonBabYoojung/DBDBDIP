@@ -246,96 +246,6 @@ def gen_scope_table() :
     
     # # cursor 및 db connection 닫기
     close_db(conn, cur)
-    
-    # pymysql.err.IntegrityError: (1452, 'Cannot add or update a child row: a foreign key constraint fails (`dbproject_navermovie`.`scope`, CONSTRAINT `scope_ibfk_1` FOREIGN KEY (`movie_id`) REFERENCES `movies` (`movie_id`))')
-
-# Director table
-def gen_director_table() :
-    conn, cur = open_db()
-    
-    # 네이버 현재상영영화 사이트 url
-    # 15세 관람가 영화 리스트 링크
-    url = "https://movie.naver.com/movie/sdb/browsing/bmovie.naver?grade=1001003"
-    
-    # request로 받아온 텍스트형태의 html를 soup 객체로 변환
-    soup = BeautifulSoup(urllib.request.urlopen(url).read(), "html.parser")
-    
-    # ul.lst_detail_t1 -> 영화 정보 리스트 -> 여기서 li 태그들을 모두 가져옴
-    ul = soup.find("ul", class_="directory_list").find_all("li")
-    # ul은 list 형태
-    
-    # movie 테이블에 행들을 추가하기 위한 sql문
-    insert_sql = """insert into director(movie_code, directorName, filmoCode)
-                values(%s, %s, %s)"""
-    
-    # 받아온 데이터 튜플들을 넣어둘 buffer 배열
-    buffer = []
-    count = 0
-    
-    for pageNum in range(1, 691):
-        
-        url = "https://movie.naver.com/movie/sdb/browsing/bmovie.naver?grade=1001003&page=" + str(pageNum).strip()
-        soup = BeautifulSoup(urllib.request.urlopen(url).read(), "html.parser")
-        a_list = soup.find("ul", class_="directory_list").find_all("a")
-
-        for i, a in enumerate(a_list):
-            # 영화 제목 title\
-            print(count)
-            if a["href"].find("/movie") != -1 :
-                
-                codeList = a["href"].split("=")
-                movie_code = int(codeList[1])
-            
-                movie_url = "https://movie.naver.com" + a["href"]
-            
-                movie_soup = BeautifulSoup(urllib.request.urlopen(movie_url).read(), "html.parser")
-                
-                isDirector = movie_soup.find("dt", class_="step2")
-                if isDirector == None:
-                    buffer.append((movie_code, None, None))  
-                
-                else: 
-                    directorList = movie_soup.find("dl", class_="info_spec").find_all("dd")[1].find("p").find_all("a")
-                    #print(directorList)
-                    for i, director in enumerate(directorList) :
-                        #print(movie_id,"의 감독 :", director)
-                        durl = "https://movie.naver.com" + director["href"]
-                        dsoup = BeautifulSoup(urllib.request.urlopen(durl).read(), "html.parser")
-                        
-                        strong = dsoup.find_all("strong", class_="pilmo_tit")
-                        
-                        for i, s in enumerate(strong) :
-                            filmoCode = int(s.find("a")['href'].split("=")[1])
-                            tuple = (movie_code, director.get_text(), filmoCode)
-                            # buffer배열에 튜플 넣어주기
-                            buffer.append(tuple)
-                        
-
-
-                # 중복 제거를 위한 절차
-                buffer_set = set(buffer)
-                buffer = list(buffer_set)
-                buffer.sort()
-                count += 1
-                
-
-                if len(buffer) % 1000 == 0 :
-                    # executemany(sql문, 튜플을 담은 list)
-                    cur.executemany(insert_sql, buffer)
-                    # db에 저장하기 위해 conn.commit() 작성
-                    conn.commit()
-                    # 추가하였으면 다시 buffer 배열 비워주기
-                    print("%d rows" %i)
-                    buffer = []
-            
-
-        # buffer 배열에 튜플 남았으면, 남은 튜플 insert
-    if buffer :
-        cur.executemany(insert_sql, buffer)
-        conn.commit()
-    
-    # # cursor 및 db connection 닫기
-    close_db(conn, cur)
 
 # Cast table
 def gen_cast_table() :
@@ -870,7 +780,6 @@ def gen_filmo_table() :
 if __name__ == '__main__' :
     gen_movie_table()
     gen_scope_table()
-    gen_director_table()
     gen_cast_table()
     gen_country_table()
     gen_photo_table()
