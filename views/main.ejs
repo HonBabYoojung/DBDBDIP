@@ -36,7 +36,7 @@
         <div id="orderBtnList"
         style="display: flex;">
             <button id="orderByTitle" style="width:100px; height: 50px; margin-right: 10px;  cursor: pointer" onclick="location.href='./movies_orderByName'">제목순</button>
-            <button id="orderByCode" style="width:100px; height: 50px; margin-right: 10px; cursor: pointer" onclick="location.href='./movies_orderByCode'">코드순</button>
+            <button id="orderByCode" style="width:100px; height: 50px; margin-right: 10px; cursor: pointer" onclick="location.href='./movies_orderByCode'">영화코드순</button>
             <button id="orderByYear" style="width:100px; height: 50px; margin-right: 10px;  cursor: pointer" onclick="location.href='./movies_orderByYear'">개봉년도순</button>
             <button id="orderByRate" style="width:100px; height: 50px; margin-right: 10px;  cursor: pointer" onclick="location.href='./movies_orderByRate'">관람객 평점순</button>
             <button id="orderByJournalist" style="width:100px; height: 50px; margin-right: 10px;  cursor: pointer" onclick="location.href='./movies_orderByJournalist'">기자/평론가 평점순</button>
@@ -47,6 +47,10 @@
         </form>
         <form style="margin-top: 20px;" action="/movieInfo_title" method="post">
             영화제목: <input type="text" name="movie_title" style="margin-right: 20px;"/>
+            <button type="submit">검색</button>
+        </form>
+        <form style="margin-top: 20px;" action="/movieInfo_alltitle" method="post">
+            영화제목(통합검색): <input type="text" name="movie_alltitle" style="margin-right: 20px;"/>
             <button type="submit">검색</button>
         </form>
         <form style="margin-top: 20px;" action="/movieInfo_actor" method="post">

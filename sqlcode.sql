@@ -114,3 +114,13 @@ create table Filmography (
 alter table Filmography modify directorName mediumtext;
 alter table Filmography modify movieTitle mediumtext;
 alter table Filmography modify movieImg mediumtext;
+
+# Recommendation 테이블
+create table Recommendation (
+	recommend_id int primary key auto_increment,
+    movie_code int NOT NULL,
+    posterImg varchar(300),
+    r_movieCode int,
+    foreign key (movie_code) references Movies(movie_code)
+);
+alter table Recommendation modify posterImg mediumtext;
