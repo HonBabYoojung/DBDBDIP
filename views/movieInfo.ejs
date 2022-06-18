@@ -166,6 +166,20 @@
                     <% } %>
                 </div>
 
+                <div style="height: 1px; background-color: lightgray; margin-bottom: 20px;" ></div>
+                <p><strong>관련 영화 추천</strong></p>
+                <div id="filmoArea" style="display: flex; flex-wrap:wrap;">
+                    
+                    <% for (let i=0; i < recommendList.length; i++) { %>
+                        
+                        <div style="width:180px; margin-right:10px;">
+                            <img src="<%= recommendList[i].posterImg %>" style="display: inline-block;" >
+                            <p onclick="location.href='../movieInfo/<%= recommendList[i].r_movieCode%>'" style="cursor:pointer;"><strong style="color: royalblue;"><%= recommendList[i].r_movieTitle %></strong></p>
+                        </div>
+
+                    <% } %>
+                </div>
+
             </div>
             
             

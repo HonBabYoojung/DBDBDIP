@@ -38,6 +38,9 @@ app.get('/movies_orderByName/:num', function (req, res) {
     + `SELECT distinct videoName, videoImgsrc, videoLink FROM movies m, video v where m.movie_code = v.movie_code and m.movie_code = ${mcode};`
     + `SELECT starScore, rateInfo, writerId, rateDate, likeNum, dislikeNum FROM movies m, rate r WHERE m.movie_code = r.movie_code and m.movie_code = ${mcode};`
     + `SELECT distinct directorName, movieTitle, movieImg FROM movies m, filmography f WHERE m.movie_code = f.movie_code and m.movie_code = ${mcode};` 
+    + `SELECT distinct posterImg, r_movieCode, r_movieTitle FROM Movies m, Recommendation r WHERE m.movie_code = r.movie_code and m.movie_code = ${mcode};`
+    
+    
     conn.query(sql, function (err, rows, fields) {
         //console.log(rows);
         if(err) console.log('query is not excuted. select fail...\n' + err);
@@ -54,6 +57,7 @@ app.get('/movies_orderByName/:num', function (req, res) {
             videoInfoList = []; // 동영상 상세정보 리스트
             rateList = []; // 한줄평 리스트
             filmoList = []; // 필모그래피 리스트
+            recommendList = [];
 
             let scopeList;
             let countryList; 
@@ -121,8 +125,13 @@ app.get('/movies_orderByName/:num', function (req, res) {
                 console.log(row);
                 filmoList.push(row)
             })
+
+            rows[6].map((row) => {
+                console.log(row);
+                recommendList.push(row)
+            })
             
-            res.render('movieInfo.ejs', { basicInfo, scopeList, countryList, directorList, castList, castInfoList, photoInfoList, videoInfoList, rateList, filmoList })
+            res.render('movieInfo.ejs', { basicInfo, scopeList, countryList, directorList, castList, castInfoList, photoInfoList, videoInfoList, rateList, filmoList, recommendList })
             
         }
     });
@@ -147,6 +156,9 @@ app.get('/movies_orderByCode/:num', function (req, res) {
     + `SELECT distinct videoName, videoImgsrc, videoLink FROM movies m, video v where m.movie_code = v.movie_code and m.movie_code = ${mcode};`
     + `SELECT starScore, rateInfo, writerId, rateDate, likeNum, dislikeNum FROM movies m, rate r WHERE m.movie_code = r.movie_code and m.movie_code = ${mcode};`
     + `SELECT distinct directorName, movieTitle, movieImg FROM movies m, filmography f WHERE m.movie_code = f.movie_code and m.movie_code = ${mcode};` 
+    + `SELECT distinct posterImg, r_movieCode, r_movieTitle FROM Movies m, Recommendation r WHERE m.movie_code = r.movie_code and m.movie_code = ${mcode};`
+    
+    
     conn.query(sql, function (err, rows, fields) {
         //console.log(rows);
         if(err) console.log('query is not excuted. select fail...\n' + err);
@@ -230,8 +242,13 @@ app.get('/movies_orderByCode/:num', function (req, res) {
                 console.log(row);
                 filmoList.push(row)
             })
+
+            rows[6].map((row) => {
+                console.log(row);
+                recommendList.push(row)
+            })
             
-            res.render('movieInfo.ejs', { basicInfo, scopeList, countryList, directorList, castList, castInfoList, photoInfoList, videoInfoList, rateList, filmoList })
+            res.render('movieInfo.ejs', { basicInfo, scopeList, countryList, directorList, castList, castInfoList, photoInfoList, videoInfoList, rateList, filmoList, recommendList })
             
         }
     });
@@ -256,6 +273,9 @@ app.get('/movies_orderByYear/:num', function (req, res) {
     + `SELECT distinct videoName, videoImgsrc, videoLink FROM movies m, video v where m.movie_code = v.movie_code and m.movie_code = ${mcode};`
     + `SELECT starScore, rateInfo, writerId, rateDate, likeNum, dislikeNum FROM movies m, rate r WHERE m.movie_code = r.movie_code and m.movie_code = ${mcode};`
     + `SELECT distinct directorName, movieTitle, movieImg FROM movies m, filmography f WHERE m.movie_code = f.movie_code and m.movie_code = ${mcode};` 
+    + `SELECT distinct posterImg, r_movieCode, r_movieTitle FROM Movies m, Recommendation r WHERE m.movie_code = r.movie_code and m.movie_code = ${mcode};`
+    
+    
     conn.query(sql, function (err, rows, fields) {
         //console.log(rows);
         if(err) console.log('query is not excuted. select fail...\n' + err);
@@ -272,6 +292,7 @@ app.get('/movies_orderByYear/:num', function (req, res) {
             videoInfoList = []; // 동영상 상세정보 리스트
             rateList = []; // 한줄평 리스트
             filmoList = []; // 필모그래피 리스트
+            recommendList = [];
 
             let scopeList;
             let countryList; 
@@ -339,8 +360,13 @@ app.get('/movies_orderByYear/:num', function (req, res) {
                 console.log(row);
                 filmoList.push(row)
             })
+
+            rows[6].map((row) => {
+                console.log(row);
+                recommendList.push(row)
+            })
             
-            res.render('movieInfo.ejs', { basicInfo, scopeList, countryList, directorList, castList, castInfoList, photoInfoList, videoInfoList, rateList, filmoList })
+            res.render('movieInfo.ejs', { basicInfo, scopeList, countryList, directorList, castList, castInfoList, photoInfoList, videoInfoList, rateList, filmoList, recommendList })
             
         }
     });
@@ -365,6 +391,8 @@ app.get('/movies_orderByRate/:num', function (req, res) {
     + `SELECT distinct videoName, videoImgsrc, videoLink FROM movies m, video v where m.movie_code = v.movie_code and m.movie_code = ${mcode};`
     + `SELECT starScore, rateInfo, writerId, rateDate, likeNum, dislikeNum FROM movies m, rate r WHERE m.movie_code = r.movie_code and m.movie_code = ${mcode};`
     + `SELECT distinct directorName, movieTitle, movieImg FROM movies m, filmography f WHERE m.movie_code = f.movie_code and m.movie_code = ${mcode};` 
+    + `SELECT distinct posterImg, r_movieCode, r_movieTitle FROM Movies m, Recommendation r WHERE m.movie_code = r.movie_code and m.movie_code = ${mcode};`
+    
     conn.query(sql, function (err, rows, fields) {
         //console.log(rows);
         if(err) console.log('query is not excuted. select fail...\n' + err);
@@ -381,6 +409,7 @@ app.get('/movies_orderByRate/:num', function (req, res) {
             videoInfoList = []; // 동영상 상세정보 리스트
             rateList = []; // 한줄평 리스트
             filmoList = []; // 필모그래피 리스트
+            recommendList = [];
 
             let scopeList;
             let countryList; 
@@ -448,8 +477,13 @@ app.get('/movies_orderByRate/:num', function (req, res) {
                 console.log(row);
                 filmoList.push(row)
             })
+
+            rows[6].map((row) => {
+                console.log(row);
+                recommendList.push(row)
+            })
             
-            res.render('movieInfo.ejs', { basicInfo, scopeList, countryList, directorList, castList, castInfoList, photoInfoList, videoInfoList, rateList, filmoList })
+            res.render('movieInfo.ejs', { basicInfo, scopeList, countryList, directorList, castList, castInfoList, photoInfoList, videoInfoList, rateList, filmoList, recommendList })
             
         }
     });
@@ -474,6 +508,8 @@ app.get('/movies_orderByJournalist/:num', function (req, res) {
     + `SELECT distinct videoName, videoImgsrc, videoLink FROM movies m, video v where m.movie_code = v.movie_code and m.movie_code = ${mcode};`
     + `SELECT starScore, rateInfo, writerId, rateDate, likeNum, dislikeNum FROM movies m, rate r WHERE m.movie_code = r.movie_code and m.movie_code = ${mcode};`
     + `SELECT distinct directorName, movieTitle, movieImg FROM movies m, filmography f WHERE m.movie_code = f.movie_code and m.movie_code = ${mcode};` 
+    + `SELECT distinct posterImg, r_movieCode, r_movieTitle FROM Movies m, Recommendation r WHERE m.movie_code = r.movie_code and m.movie_code = ${mcode};`
+
     conn.query(sql, function (err, rows, fields) {
         //console.log(rows);
         if(err) console.log('query is not excuted. select fail...\n' + err);
@@ -490,6 +526,7 @@ app.get('/movies_orderByJournalist/:num', function (req, res) {
             videoInfoList = []; // 동영상 상세정보 리스트
             rateList = []; // 한줄평 리스트
             filmoList = []; // 필모그래피 리스트
+            recommendList = [];
 
             let scopeList;
             let countryList; 
@@ -557,8 +594,13 @@ app.get('/movies_orderByJournalist/:num', function (req, res) {
                 console.log(row);
                 filmoList.push(row)
             })
+
+            rows[6].map((row) => {
+                console.log(row);
+                recommendList.push(row)
+            })
             
-            res.render('movieInfo.ejs', { basicInfo, scopeList, countryList, directorList, castList, castInfoList, photoInfoList, videoInfoList, rateList, filmoList })
+            res.render('movieInfo.ejs', { basicInfo, scopeList, countryList, directorList, castList, castInfoList, photoInfoList, videoInfoList, rateList, filmoList, recommendList })
             
         }
     });
@@ -593,16 +635,12 @@ router.route('/movieInfo').post(
         + `SELECT distinct videoName, videoImgsrc, videoLink FROM movies m, video v where m.movie_code = v.movie_code and m.movie_code = ${mcode};`
         + `SELECT starScore, rateInfo, writerId, rateDate, likeNum, dislikeNum FROM movies m, rate r WHERE m.movie_code = r.movie_code and m.movie_code = ${mcode};`
         + `SELECT distinct directorName, movieTitle, movieImg FROM movies m, filmography f WHERE m.movie_code = f.movie_code and m.movie_code = ${mcode};`
+        + `SELECT distinct posterImg, r_movieCode, r_movieTitle FROM Movies m, Recommendation r WHERE m.movie_code = r.movie_code and m.movie_code = ${mcode};`
 
         conn.query(sql, function (err, rows, fields) {
 
             console.log(rows.length);
             if(err) console.log('query is not excuted. select fail...\n' + err);
-
-            // else if(rows.length == 0){
-            //     alert("검색 결과가 존재하지 않습니다. 다시 입력하시길 바랍니다.")
-            //     return 0;
-            // }
 
             else {
 
@@ -617,15 +655,14 @@ router.route('/movieInfo').post(
             videoInfoList = []; // 동영상 상세정보 리스트
             rateList = []; // 한줄평 리스트
             filmoList = []; // 필모그래피 리스트
+            recommendList = []; // 관련영화추천 리스트
 
             let scopeList;
             let countryList; 
             let directorList; 
-            let castList; 
-            
+            let castList;
             
             //console.log(rows);
-        
             
             rows[0].map((rowData, index) => {
                 //console.log(rowData);
@@ -684,15 +721,134 @@ router.route('/movieInfo').post(
                 console.log(row);
                 filmoList.push(row)
             })
+
+            rows[6].map((row) => {
+                console.log(row);
+                recommendList.push(row)
+            })
             
-            res.render('movieInfo.ejs', { basicInfo, scopeList, countryList, directorList, castList, castInfoList, photoInfoList, videoInfoList, rateList, filmoList })
+            res.render('movieInfo.ejs', { basicInfo, scopeList, countryList, directorList, castList, castInfoList, photoInfoList, videoInfoList, rateList, filmoList, recommendList })
             
             }
             });
         }
     });
 
-    });
+});
+
+// 관련영화추천의 영화 클릭했을 때 이벤트 처리
+app.get('/movieInfo/:num', function (req, res) {
+    
+    // console.log('output 처리함')
+    let mcode = req.params.num;
+    
+    console.log(mcode);
+    
+
+        var sql = `SELECT distinct title, manufacture_year, audience_rate, audience_count, journalist_rate, journalist_count, countryName, playing_time, opening_date, directorName, castName, image, summary FROM movies m, country co, director d, moviecast mc, scope s where m.movie_code = co.movie_code and m.movie_code = d.movie_code and mc.movie_code = m.movie_code and s.movie_code = m.movie_code and m.movie_code = ${mcode};` 
+        +  `SELECT distinct castName, mainorsub, roleName, castImg FROM movies m, moviecast mc WHERE m.movie_code = mc.movie_code and m.movie_code = ${mcode};`
+        + `SELECT distinct imageType, photoLink FROM photo p, movies m WHERE p.movie_code = m.movie_code and m.movie_code = ${mcode};`
+        + `SELECT distinct videoName, videoImgsrc, videoLink FROM movies m, video v where m.movie_code = v.movie_code and m.movie_code = ${mcode};`
+        + `SELECT starScore, rateInfo, writerId, rateDate, likeNum, dislikeNum FROM movies m, rate r WHERE m.movie_code = r.movie_code and m.movie_code = ${mcode};`
+        + `SELECT distinct directorName, movieTitle, movieImg FROM movies m, filmography f WHERE m.movie_code = f.movie_code and m.movie_code = ${mcode};`
+        + `SELECT distinct posterImg, r_movieCode, r_movieTitle FROM Movies m, Recommendation r WHERE m.movie_code = r.movie_code and m.movie_code = ${mcode};`
+
+        conn.query(sql, function (err, rows, fields) {
+
+            console.log(rows.length);
+            if(err) console.log('query is not excuted. select fail...\n' + err);
+
+            else {
+
+            basicInfo = []; // title, manufacture_year, audience_rate, journalist_rate, playing_time, opening_date, image
+            scope = []; // scopeName 여러개
+            country = []; // countryName 여러개
+            director = []; // directorName 여러개
+            cast = []; // castName 여러개
+            
+            castInfoList = []; // 배우/제작진 상세정보 리스트
+            photoInfoList = []; // 포토 상세정보 리스트
+            videoInfoList = []; // 동영상 상세정보 리스트
+            rateList = []; // 한줄평 리스트
+            filmoList = []; // 필모그래피 리스트
+            recommendList = []; // 관련영화추천 리스트
+
+            let scopeList;
+            let countryList; 
+            let directorList; 
+            let castList;
+            
+            //console.log(rows);
+            
+            rows[0].map((rowData, index) => {
+                //console.log(rowData);
+                if(index == 0) {
+                    
+                    basicInfo.push(rowData.title);
+                    basicInfo.push(rowData.manufacture_year);
+                    basicInfo.push(rowData.audience_rate);
+                    basicInfo.push(rowData.audience_count);
+                    basicInfo.push(rowData.journalist_rate);
+                    basicInfo.push(rowData.journalist_count);
+                    basicInfo.push(rowData.playing_time);
+                    var newdate = moment(rowData.opening_date).utc().format('YYYY-MM-DD');
+                    basicInfo.push(newdate);
+                    basicInfo.push(rowData.image);
+                    basicInfo.push(rowData.summary);
+                    scope.push(rowData.scopeName);
+                    country.push(rowData.countryName);
+                    director.push(rowData.directorName);
+                    cast.push(rowData.castName);
+                }
+                else {
+                    scope.push(rowData.scopeName);
+                    country.push(rowData.countryName);
+                    director.push(rowData.directorName);
+                    cast.push(rowData.castName);
+                }
+                
+
+            });
+            scopeList = [ ...new Set(scope) ];
+            countryList = [ ...new Set(country) ];
+            directorList = [ ...new Set(director) ];
+            castList = [ ...new Set(cast) ]; 
+            
+
+            
+
+            rows[1].map((row) => {
+                castInfoList.push(row)
+            })
+
+            rows[2].map((row) => {
+                photoInfoList.push(row)
+            })
+
+            rows[3].map((row) => {
+                videoInfoList.push(row)
+            })
+
+            rows[4].map((row) => {
+                rateList.push(row)
+            })
+            
+            rows[5].map((row) => {
+                console.log(row);
+                filmoList.push(row)
+            })
+
+            rows[6].map((row) => {
+                console.log(row);
+                recommendList.push(row)
+            })
+            
+            res.render('movieInfo.ejs', { basicInfo, scopeList, countryList, directorList, castList, castInfoList, photoInfoList, videoInfoList, rateList, filmoList, recommendList })
+            
+            }
+        });
+
+});
 
 
 // 영화상세정보 - 영화제목  
@@ -729,6 +885,7 @@ router.route('/movieInfo_title').post(
     + `SELECT distinct videoName, videoImgsrc, videoLink FROM movies m, video v where m.movie_code = v.movie_code and m.movie_code = ${mcode};`
     + `SELECT starScore, rateInfo, writerId, rateDate, likeNum, dislikeNum FROM movies m, rate r WHERE m.movie_code = r.movie_code and m.movie_code = ${mcode};`
     + `SELECT distinct directorName, movieTitle, movieImg FROM movies m, filmography f WHERE m.movie_code = f.movie_code and m.movie_code = ${mcode};`
+    + `SELECT distinct posterImg, r_movieCode, r_movieTitle FROM Movies m, Recommendation r WHERE m.movie_code = r.movie_code and m.movie_code = ${mcode};`
 
     conn.query(sql, function (err, rows, fields) {
         
@@ -747,6 +904,7 @@ router.route('/movieInfo_title').post(
             videoInfoList = []; // 동영상 상세정보 리스트
             rateList = []; // 한줄평 리스트
             filmoList = []; // 필모그래피 리스트
+            recommendList = [];
 
             let scopeList;
             let countryList; 
@@ -814,8 +972,13 @@ router.route('/movieInfo_title').post(
                 console.log(row);
                 filmoList.push(row)
             })
+
+            rows[6].map((row) => {
+                console.log(row);
+                recommendList.push(row)
+            })
             
-            res.render('movieInfo_title.ejs', { basicInfo, scopeList, countryList, directorList, castList, castInfoList, photoInfoList, videoInfoList, rateList, filmoList })
+            res.render('movieInfo_title.ejs', { basicInfo, scopeList, countryList, directorList, castList, castInfoList, photoInfoList, videoInfoList, rateList, filmoList, recommendList })
             
         }
     });
@@ -858,6 +1021,9 @@ app.get('/movieInfo_actor/:num', function (req, res) {
     + `SELECT distinct videoName, videoImgsrc, videoLink FROM movies m, video v where m.movie_code = v.movie_code and m.movie_code = ${mcode};`
     + `SELECT starScore, rateInfo, writerId, rateDate, likeNum, dislikeNum FROM movies m, rate r WHERE m.movie_code = r.movie_code and m.movie_code = ${mcode};`
     + `SELECT distinct directorName, movieTitle, movieImg FROM movies m, filmography f WHERE m.movie_code = f.movie_code and m.movie_code = ${mcode};` 
+    + `SELECT distinct posterImg, r_movieCode, r_movieTitle FROM Movies m, Recommendation r WHERE m.movie_code = r.movie_code and m.movie_code = ${mcode};`
+    
+    
     conn.query(sql, function (err, rows, fields) {
         //console.log(rows);
         if(err) console.log('query is not excuted. select fail...\n' + err);
@@ -874,11 +1040,13 @@ app.get('/movieInfo_actor/:num', function (req, res) {
             videoInfoList = []; // 동영상 상세정보 리스트
             rateList = []; // 한줄평 리스트
             filmoList = []; // 필모그래피 리스트
+            recommendList = [];
 
             let scopeList;
             let countryList; 
             let directorList; 
             let castList; 
+
             
             
             //console.log(rows);
@@ -941,8 +1109,13 @@ app.get('/movieInfo_actor/:num', function (req, res) {
                 console.log(row);
                 filmoList.push(row)
             })
+
+            rows[6].map((row) => {
+                console.log(row);
+                recommendList.push(row)
+            })
             
-            res.render('movieInfo.ejs', { basicInfo, scopeList, countryList, directorList, castList, castInfoList, photoInfoList, videoInfoList, rateList, filmoList })
+            res.render('movieInfo.ejs', { basicInfo, scopeList, countryList, directorList, castList, castInfoList, photoInfoList, videoInfoList, rateList, filmoList, recommendList })
             
         }
     });
@@ -974,6 +1147,9 @@ app.get('/movieInfo_director/:num', function (req, res) {
     + `SELECT distinct videoName, videoImgsrc, videoLink FROM movies m, video v where m.movie_code = v.movie_code and m.movie_code = ${mcode};`
     + `SELECT starScore, rateInfo, writerId, rateDate, likeNum, dislikeNum FROM movies m, rate r WHERE m.movie_code = r.movie_code and m.movie_code = ${mcode};`
     + `SELECT distinct directorName, movieTitle, movieImg FROM movies m, filmography f WHERE m.movie_code = f.movie_code and m.movie_code = ${mcode};` 
+    + `SELECT distinct posterImg, r_movieCode, r_movieTitle FROM Movies m, Recommendation r WHERE m.movie_code = r.movie_code and m.movie_code = ${mcode};`
+    
+    
     conn.query(sql, function (err, rows, fields) {
         //console.log(rows);
         if(err) console.log('query is not excuted. select fail...\n' + err);
@@ -990,6 +1166,7 @@ app.get('/movieInfo_director/:num', function (req, res) {
             videoInfoList = []; // 동영상 상세정보 리스트
             rateList = []; // 한줄평 리스트
             filmoList = []; // 필모그래피 리스트
+            recommendList = [];
 
             let scopeList;
             let countryList; 
@@ -1057,8 +1234,13 @@ app.get('/movieInfo_director/:num', function (req, res) {
                 console.log(row);
                 filmoList.push(row)
             })
+
+            rows[6].map((row) => {
+                console.log(row);
+                recommendList.push(row)
+            })
             
-            res.render('movieInfo.ejs', { basicInfo, scopeList, countryList, directorList, castList, castInfoList, photoInfoList, videoInfoList, rateList, filmoList })
+            res.render('movieInfo.ejs', { basicInfo, scopeList, countryList, directorList, castList, castInfoList, photoInfoList, videoInfoList, rateList, filmoList, recommendList })
             
         }
     });
@@ -1090,6 +1272,8 @@ app.get('/movieInfo_scope/:num', function (req, res) {
     + `SELECT distinct videoName, videoImgsrc, videoLink FROM movies m, video v where m.movie_code = v.movie_code and m.movie_code = ${mcode};`
     + `SELECT starScore, rateInfo, writerId, rateDate, likeNum, dislikeNum FROM movies m, rate r WHERE m.movie_code = r.movie_code and m.movie_code = ${mcode};`
     + `SELECT distinct directorName, movieTitle, movieImg FROM movies m, filmography f WHERE m.movie_code = f.movie_code and m.movie_code = ${mcode};` 
+    + `SELECT distinct posterImg, r_movieCode, r_movieTitle FROM Movies m, Recommendation r WHERE m.movie_code = r.movie_code and m.movie_code = ${mcode};`
+    
     conn.query(sql, function (err, rows, fields) {
         //console.log(rows);
         if(err) console.log('query is not excuted. select fail...\n' + err);
@@ -1106,6 +1290,7 @@ app.get('/movieInfo_scope/:num', function (req, res) {
             videoInfoList = []; // 동영상 상세정보 리스트
             rateList = []; // 한줄평 리스트
             filmoList = []; // 필모그래피 리스트
+            recommendList = [];
 
             let scopeList;
             let countryList; 
@@ -1173,8 +1358,13 @@ app.get('/movieInfo_scope/:num', function (req, res) {
                 console.log(row);
                 filmoList.push(row)
             })
+
+            rows[6].map((row) => {
+                console.log(row);
+                recommendList.push(row)
+            })
             
-            res.render('movieInfo.ejs', { basicInfo, scopeList, countryList, directorList, castList, castInfoList, photoInfoList, videoInfoList, rateList, filmoList })
+            res.render('movieInfo.ejs', { basicInfo, scopeList, countryList, directorList, castList, castInfoList, photoInfoList, videoInfoList, rateList, filmoList, recommendList})
             
         }
     });
@@ -1206,6 +1396,9 @@ app.get('/movieInfo_year/:num', function (req, res) {
     + `SELECT distinct videoName, videoImgsrc, videoLink FROM movies m, video v where m.movie_code = v.movie_code and m.movie_code = ${mcode};`
     + `SELECT starScore, rateInfo, writerId, rateDate, likeNum, dislikeNum FROM movies m, rate r WHERE m.movie_code = r.movie_code and m.movie_code = ${mcode};`
     + `SELECT distinct directorName, movieTitle, movieImg FROM movies m, filmography f WHERE m.movie_code = f.movie_code and m.movie_code = ${mcode};` 
+    + `SELECT distinct posterImg, r_movieCode, r_movieTitle FROM Movies m, Recommendation r WHERE m.movie_code = r.movie_code and m.movie_code = ${mcode};`
+    
+    
     conn.query(sql, function (err, rows, fields) {
         //console.log(rows);
         if(err) console.log('query is not excuted. select fail...\n' + err);
@@ -1222,6 +1415,7 @@ app.get('/movieInfo_year/:num', function (req, res) {
             videoInfoList = []; // 동영상 상세정보 리스트
             rateList = []; // 한줄평 리스트
             filmoList = []; // 필모그래피 리스트
+            recommendList = [];
 
             let scopeList;
             let countryList; 
@@ -1289,8 +1483,13 @@ app.get('/movieInfo_year/:num', function (req, res) {
                 console.log(row);
                 filmoList.push(row)
             })
+
+            rows[6].map((row) => {
+                console.log(row);
+                recommendList.push(row)
+            })
             
-            res.render('movieInfo.ejs', { basicInfo, scopeList, countryList, directorList, castList, castInfoList, photoInfoList, videoInfoList, rateList, filmoList })
+            res.render('movieInfo.ejs', { basicInfo, scopeList, countryList, directorList, castList, castInfoList, photoInfoList, videoInfoList, rateList, filmoList, recommendList })
             
         }
     });
@@ -1322,6 +1521,9 @@ app.get('/movieInfo_country/:num', function (req, res) {
     + `SELECT distinct videoName, videoImgsrc, videoLink FROM movies m, video v where m.movie_code = v.movie_code and m.movie_code = ${mcode};`
     + `SELECT starScore, rateInfo, writerId, rateDate, likeNum, dislikeNum FROM movies m, rate r WHERE m.movie_code = r.movie_code and m.movie_code = ${mcode};`
     + `SELECT distinct directorName, movieTitle, movieImg FROM movies m, filmography f WHERE m.movie_code = f.movie_code and m.movie_code = ${mcode};` 
+    + `SELECT distinct posterImg, r_movieCode, r_movieTitle FROM Movies m, Recommendation r WHERE m.movie_code = r.movie_code and m.movie_code = ${mcode};`
+    
+    
     conn.query(sql, function (err, rows, fields) {
         //console.log(rows);
         if(err) console.log('query is not excuted. select fail...\n' + err);
@@ -1338,6 +1540,7 @@ app.get('/movieInfo_country/:num', function (req, res) {
             videoInfoList = []; // 동영상 상세정보 리스트
             rateList = []; // 한줄평 리스트
             filmoList = []; // 필모그래피 리스트
+            recommendList = [];
 
             let scopeList;
             let countryList; 
@@ -1405,8 +1608,13 @@ app.get('/movieInfo_country/:num', function (req, res) {
                 console.log(row);
                 filmoList.push(row)
             })
+
+            rows[6].map((row) => {
+                console.log(row);
+                recommendList.push(row)
+            })
             
-            res.render('movieInfo.ejs', { basicInfo, scopeList, countryList, directorList, castList, castInfoList, photoInfoList, videoInfoList, rateList, filmoList })
+            res.render('movieInfo.ejs', { basicInfo, scopeList, countryList, directorList, castList, castInfoList, photoInfoList, videoInfoList, rateList, filmoList, recommendList })
             
         }
     });
@@ -1438,6 +1646,9 @@ app.get('/movieInfo_alltitle/:num', function (req, res) {
     + `SELECT distinct videoName, videoImgsrc, videoLink FROM movies m, video v where m.movie_code = v.movie_code and m.movie_code = ${mcode};`
     + `SELECT starScore, rateInfo, writerId, rateDate, likeNum, dislikeNum FROM movies m, rate r WHERE m.movie_code = r.movie_code and m.movie_code = ${mcode};`
     + `SELECT distinct directorName, movieTitle, movieImg FROM movies m, filmography f WHERE m.movie_code = f.movie_code and m.movie_code = ${mcode};` 
+    + `SELECT distinct posterImg, r_movieCode, r_movieTitle FROM Movies m, Recommendation r WHERE m.movie_code = r.movie_code and m.movie_code = ${mcode};`
+    
+    
     conn.query(sql, function (err, rows, fields) {
         //console.log(rows);
         if(err) console.log('query is not excuted. select fail...\n' + err);
@@ -1454,6 +1665,7 @@ app.get('/movieInfo_alltitle/:num', function (req, res) {
             videoInfoList = []; // 동영상 상세정보 리스트
             rateList = []; // 한줄평 리스트
             filmoList = []; // 필모그래피 리스트
+            recommendList = [];
 
             let scopeList;
             let countryList; 
@@ -1521,8 +1733,13 @@ app.get('/movieInfo_alltitle/:num', function (req, res) {
                 console.log(row);
                 filmoList.push(row)
             })
+
+            rows[6].map((row) => {
+                console.log(row);
+                recommendList.push(row)
+            })
             
-            res.render('movieInfo.ejs', { basicInfo, scopeList, countryList, directorList, castList, castInfoList, photoInfoList, videoInfoList, rateList, filmoList })
+            res.render('movieInfo.ejs', { basicInfo, scopeList, countryList, directorList, castList, castInfoList, photoInfoList, videoInfoList, rateList, filmoList, recommendList })
             
         }
     });

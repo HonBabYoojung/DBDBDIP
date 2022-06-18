@@ -779,8 +779,8 @@ def gen_recommend_table() :
     # ul은 list 형태
     
     # movie 테이블에 행들을 추가하기 위한 sql문
-    insert_sql = """insert into Recommendation(movie_code, posterImg, r_movieCode)
-                values(%s, %s, %s, %s, %s, %s, %s)"""
+    insert_sql = """insert into recommendation(movie_code, posterImg, r_movieCode, r_movieTitle)
+                values(%s, %s, %s, %s)"""
     
     # 받아온 데이터 튜플들을 넣어둘 buffer 배열
     buffer = []
@@ -807,27 +807,27 @@ def gen_recommend_table() :
                 isRecommend = movie_soup.find("ul", class_="thumb_link_mv")
                 
                 if isRecommend == None:
-                    buffer.append((movie_code, None, None))  
+                    buffer.append((movie_code, None, None, None))  
                 
                 else: 
                     
                     rUl = movie_soup.find("ul", class_="thumb_link_mv").find_all("li")
                     
                     for i, rate in enumerate(rUl) :
-                        starScore = rate.find("div", class_= "star_score").find("em").get_text()
-                        rateInfo = rate.find("div", class_="score_reple").find("p").get_text().strip()
-                        writerId = rate.find("div", class_="score_reple").find("dl").find("dt").find_all("em")[0].find("a").find("span").get_text()
-                        rateDate = rate.find("div", class_="score_reple").find("dl").find("dt").find_all("em")[1].get_text()
-                        likeNum = rate.find("a", class_="_sympathyButton").find("strong").get_text()
-                        dislikeNum = rate.find("a", class_="_notSympathyButton").find("strong").get_text()
-                        buffer.append((movie_code, starScore, rateInfo, writerId, rateDate, likeNum, dislikeNum))  
+                        posterImg = rate.find("img")["src"].strip()
+                        r_movieCode = int(rate.find("a", class_="thumb")['href'].split("=")[1])
+                        r_movieTitle = rate.find("a", class_="title_mv").get_text()
+                        
+                        buffer.append((movie_code, posterImg, r_movieCode, r_movieTitle));
 
                 # 중복 제거를 위한 절차
                 buffer_set = set(buffer)
                 buffer = list(buffer_set)
-                count += 1
+                #buffer.sort()
+                count += 1;
+                
 
-                if len(buffer) % 1000 == 0 :
+                if len(buffer) % 1 == 0 :
                     # executemany(sql문, 튜플을 담은 list)
                     cur.executemany(insert_sql, buffer)
                     # db에 저장하기 위해 conn.commit() 작성
@@ -856,4 +856,5 @@ if __name__ == '__main__' :
     # gen_video_table()
     # gen_rate_table()
     # gen_filmo_table()
+    
     gen_recommend_table()
