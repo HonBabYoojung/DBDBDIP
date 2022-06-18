@@ -121,6 +121,8 @@ create table Recommendation (
     movie_code int NOT NULL,
     posterImg varchar(300),
     r_movieCode int,
+    r_movieTitle varchar(100),
     foreign key (movie_code) references Movies(movie_code)
 );
 alter table Recommendation modify posterImg mediumtext;
+alter table Recommendation modify r_movieTitle mediumtext;
